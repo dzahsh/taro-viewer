@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#15212A" />
+<title>Finding aid — TARO</title>
+<meta name="description" content="An archival finding aid from Texas Archival Resources Online (TARO)." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root{
+    --paper:#F0EDE5; --paper-2:#E7E3D8; --panel:#F7F5EF; --panel-2:#FBFAF6;
+    --ink:#1E1D18; --ink-2:#56524A; --ink-3:#8A8475;
+    --rule:#D8D2C4; --rule-soft:#E6E1D5;
+    --chrome:#15212A; --chrome-2:#1E2F3A; --chrome-line:rgba(255,255,255,.10);
+    --paper-on-chrome:#E9E5DB; --dim-on-chrome:#9DAAB2;
+    --accent:#1C5070; --accent-2:#143C56; --accent-bright:#82B2CF;
+    --mark:#F3DA9F; --mark-line:#A9731F;
+    --sans:'Archivo',system-ui,sans-serif;
+    --serif:'Source Serif 4',Georgia,serif;
+    --mono:'Space Mono',ui-monospace,monospace;
+    --rail-w:328px;
+    --maxw:840px;
+    --mh:128px; /* masthead height, measured at runtime */
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--serif); font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent); text-underline-offset:2px; text-decoration-thickness:1px}
+  a:hover{color:var(--accent-2)}
+  :focus-visible{outline:2.5px solid var(--accent); outline-offset:2px; border-radius:3px}
+  [id]{scroll-margin-top:calc(var(--mh) + 16px)}
+  mark{background:var(--mark); color:inherit; padding:0 .06em; border-radius:2px; box-shadow:inset 0 -1px 0 var(--mark-line)}
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    position:sticky; top:0; z-index:40; background:var(--chrome); color:var(--paper-on-chrome);
+    border-bottom:1px solid #0c151b; box-shadow:0 1px 0 rgba(0,0,0,.25);
+  }
+  .masthead-in{max-width:calc(var(--rail-w) + var(--maxw) + 120px); margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+  .brand{display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 320px}
+  .brand .repo{font-family:var(--sans); font-weight:600; font-size:.66rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--dim-on-chrome)}
+  .brand .ttl{font-family:var(--sans); font-weight:700; font-size:1.04rem; letter-spacing:-.01em;
+    color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .brand .ttl a{color:inherit; text-decoration:none}
+  .tools{display:flex; align-items:center; gap:10px; flex:1 1 340px; min-width:240px}
+  .search{position:relative; flex:1}
+  .search input{
+    width:100%; font-family:var(--sans); font-size:.92rem; color:#fff;
+    background:var(--chrome-2); border:1px solid var(--chrome-line); border-radius:8px;
+    padding:9px 34px 9px 34px;
+  }
+  .search input::placeholder{color:#8595a0}
+  .search input:focus{outline:none; border-color:var(--accent-bright); background:#22343f}
+  .search .mag{position:absolute; left:11px; top:50%; transform:translateY(-50%);
+    width:14px; height:14px; opacity:.65; pointer-events:none}
+  .search .clear{position:absolute; right:7px; top:50%; transform:translateY(-50%);
+    border:0; background:transparent; color:var(--dim-on-chrome); cursor:pointer; font-size:1.1rem;
+    line-height:1; padding:4px; border-radius:6px; display:none}
+  .search .clear:hover{color:#fff; background:var(--chrome-line)}
+  .search.has-q .clear{display:block}
+  .count{font-family:var(--mono); font-size:.72rem; color:var(--accent-bright); white-space:nowrap; min-width:0}
+  .count[hidden]{display:none}
+  .drawer-btn{display:none; font-family:var(--sans); font-weight:600; font-size:.78rem; letter-spacing:.04em;
+    color:#fff; background:var(--chrome-2); border:1px solid var(--chrome-line); border-radius:8px;
+    padding:9px 13px; cursor:pointer; align-items:center; gap:8px}
+  .drawer-btn:hover{background:#22343f}
+
+  /* ---------- shell ---------- */
+  .app{max-width:calc(var(--rail-w) + var(--maxw) + 120px); margin:0 auto; padding:0 28px;
+    display:grid; grid-template-columns:var(--rail-w) minmax(0,1fr); gap:48px; align-items:start}
+
+  /* ---------- rail ---------- */
+  .rail{position:sticky; top:var(--mh); align-self:start; max-height:calc(100vh - var(--mh));
+    overflow:auto; padding:22px 4px 40px 0; font-family:var(--sans);
+    border-right:1px solid var(--rule-soft)}
+  .rail::-webkit-scrollbar{width:9px}
+  .rail::-webkit-scrollbar-thumb{background:#cfc8b8; border-radius:6px; border:2px solid var(--paper)}
+  .rail-eyebrow{font-size:.62rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-3); padding:0 10px; margin:0 0 6px}
+  .rail-group{margin-bottom:22px}
+  .rail-group + .rail-group{border-top:1px solid var(--rule-soft); padding-top:20px}
+  .rail-head-row{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:0 10px}
+  .rail-actions{display:flex; gap:4px}
+  .rail-actions button{font-family:var(--sans); font-size:.62rem; letter-spacing:.04em; color:var(--ink-3);
+    background:transparent; border:0; cursor:pointer; padding:2px 4px; border-radius:5px}
+  .rail-actions button:hover{color:var(--accent); background:var(--paper-2)}
+
+  .navlink{display:block; color:var(--ink-2); text-decoration:none; font-size:.85rem; line-height:1.3;
+    padding:6px 10px; border-radius:7px; border-left:2px solid transparent}
+  .navlink:hover{background:var(--paper-2); color:var(--ink)}
+  .navlink.active{color:var(--accent-2); background:var(--paper-2); border-left-color:var(--accent); font-weight:600}
+
+  /* contents tree */
+  .tree, .tree ul{list-style:none; margin:0; padding:0}
+  .tree ul{margin-left:0}
+  .node{position:relative}
+  .row{display:flex; align-items:center; gap:2px; padding:0; border-left:2px solid transparent; border-radius:0 7px 7px 0}
+  .row:hover{background:var(--paper-2)}
+  .row.active{background:var(--paper-2); border-left-color:var(--accent)}
+  .twist{flex:0 0 auto; width:22px; height:30px; display:grid; place-items:center; border:0; background:transparent;
+    cursor:pointer; color:var(--ink-3)}
+  .twist:hover{color:var(--accent)}
+  .twist svg{width:9px; height:9px; transition:transform .18s ease}
+  .node.collapsed > .row .twist svg{transform:rotate(-90deg)}
+  .twist.leaf{visibility:hidden}
+  .row a.label{flex:1; min-width:0; display:flex; align-items:baseline; gap:8px;
+    text-decoration:none; color:var(--ink-2); font-size:.82rem; line-height:1.28; padding:6px 8px 6px 0}
+  .row a.label:hover, .row.active a.label{color:var(--ink)}
+  .row .ltext{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .node[data-level="series"] > .row a.label{font-weight:700; color:var(--ink); white-space:normal}
+  .node[data-level="series"] > .row a.label .ltext{white-space:normal}
+  .node[data-level="subseries"] > .row a.label{font-weight:600}
+  .node.collapsed > ul{display:none}
+  .tree .node ul{padding-left:14px; margin-left:9px; border-left:1px solid var(--rule-soft)}
+
+  .boxchip{flex:0 0 auto; font-family:var(--mono); font-size:.62rem; letter-spacing:.02em; color:var(--ink-2);
+    background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:1px 5px; white-space:nowrap}
+  .row.active .boxchip{border-color:#c7d4dc}
+
+  /* search states in tree */
+  .tree.searching .node.miss{display:none}
+  .tree.searching .node.ancestor > .row{opacity:.62}
+  .tree.searching .node.hit > .row{background:var(--mark); border-radius:0 7px 7px 0}
+  .tree.searching .node.hit > .row .boxchip{background:#fff}
+
+  /* ---------- main ---------- */
+  .doc{padding:34px 0 120px; max-width:var(--maxw)}
+  .block{margin:0 0 14px; scroll-margin-top:calc(var(--mh) + 16px)}
+  .eyebrow{font-family:var(--sans); font-weight:700; font-size:.66rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 10px}
+  .doc h2{font-family:var(--sans); font-weight:700; font-size:1.4rem; letter-spacing:-.01em;
+    line-height:1.2; margin:0 0 14px; color:var(--ink)}
+  .section{padding:30px 0; border-top:1px solid var(--rule)}
+  .section.hit{position:relative}
+  .section.hit::before{content:""; position:absolute; left:-18px; top:30px; bottom:30px; width:3px;
+    background:var(--accent); border-radius:2px; opacity:.55}
+  .section p{margin:0 0 1em}
+  .section p:last-child{margin-bottom:0}
+  .prose{max-width:64ch}
+  .prose em{font-style:italic}
+
+  /* title block (hero) */
+  .titleblock{background:var(--panel); border:1px solid var(--rule); border-radius:14px; padding:30px 32px 26px; margin-bottom:8px}
+  .titleblock .kicker{font-family:var(--sans); font-weight:600; font-size:.66rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--ink-3); margin:0 0 12px}
+  .titleblock h1{font-family:var(--sans); font-weight:800; letter-spacing:-.022em; line-height:1.02;
+    font-size:clamp(1.95rem,4.4vw,3rem); margin:0 0 8px; color:var(--ink)}
+  .titleblock .creator{font-family:var(--serif); font-style:italic; color:var(--ink-2); font-size:1.05rem; margin:0 0 20px}
+  .specs{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+    background:var(--rule); border:1px solid var(--rule); border-radius:9px; overflow:hidden; margin-bottom:22px}
+  .spec{background:var(--panel-2); padding:11px 14px}
+  .spec dt{font-family:var(--sans); font-weight:700; font-size:.6rem; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--ink-3); margin:0 0 4px}
+  .spec dd{margin:0; font-family:var(--mono); font-size:.82rem; line-height:1.35; color:var(--ink)}
+  .spec dd.serif{font-family:var(--serif); font-size:.95rem}
+  .lead{font-size:1.06rem; line-height:1.6; color:var(--ink); margin:0; max-width:62ch}
+  .lead .label{display:block; font-family:var(--sans); font-weight:700; font-size:.6rem; letter-spacing:.13em;
+    text-transform:uppercase; color:var(--ink-3); margin-bottom:6px}
+
+  /* index terms */
+  .termgroups{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px 28px}
+  .termgroup h3{font-family:var(--sans); font-weight:700; font-size:.74rem; letter-spacing:.06em;
+    color:var(--ink); margin:0 0 10px; padding-bottom:7px; border-bottom:1px solid var(--rule)}
+  .chips{display:flex; flex-wrap:wrap; gap:7px}
+  .chip{font-family:var(--sans); font-size:.8rem; color:var(--accent-2); background:var(--panel);
+    border:1px solid var(--rule); border-radius:999px; padding:4px 11px; cursor:pointer; line-height:1.25}
+  .chip:hover{background:#fff; border-color:var(--accent-bright); color:var(--accent)}
+  .chip .k{display:inline-block; width:13px; height:13px; margin-right:5px; vertical-align:-2px; opacity:.6}
+
+  /* biblist */
+  .biblist{margin:0; padding:0; list-style:none}
+  .biblist li{padding:9px 0; border-bottom:1px dotted var(--rule); font-size:.98rem; color:var(--ink-2)}
+  .biblist li:last-child{border-bottom:0}
+  .biblist em{font-style:italic; color:var(--ink)}
+
+  /* ---------- contents (dsc) ---------- */
+  .dsc-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap}
+  .dsc-actions{display:flex; gap:8px}
+  .btn-ghost{font-family:var(--sans); font-weight:600; font-size:.72rem; letter-spacing:.03em; color:var(--accent);
+    background:transparent; border:1px solid var(--rule); border-radius:7px; padding:6px 11px; cursor:pointer}
+  .btn-ghost:hover{background:var(--panel); border-color:var(--accent-bright)}
+
+  .series{border:1px solid var(--rule); border-radius:12px; background:var(--panel-2); margin-top:18px; overflow:hidden}
+  .series.searching-hide{display:none}
+  .series-bar{display:flex; align-items:center; gap:12px; width:100%; text-align:left;
+    background:transparent; border:0; cursor:pointer; padding:16px 18px; font-family:var(--sans)}
+  .series-bar:hover{background:var(--panel)}
+  .series-bar .tw{flex:0 0 auto; width:20px; height:20px; display:grid; place-items:center; color:var(--accent)}
+  .series-bar .tw svg{width:11px; height:11px; transition:transform .18s ease}
+  .series.collapsed .series-bar .tw svg{transform:rotate(-90deg)}
+  .series-bar .sname{flex:1; min-width:0}
+  .series-bar .sname .stitle{font-weight:700; font-size:1.05rem; color:var(--ink); letter-spacing:-.005em}
+  .series-bar .sname .smeta{font-family:var(--mono); font-size:.72rem; color:var(--ink-3); margin-top:3px}
+  .series-bar .stag{font-family:var(--mono); font-size:.66rem; color:var(--ink-2); background:var(--paper);
+    border:1px solid var(--rule); border-radius:5px; padding:3px 8px; white-space:nowrap}
+  .series-body{padding:4px 18px 14px; border-top:1px solid var(--rule)}
+  .series.collapsed .series-body{display:none}
+  .series-abstract{font-size:.96rem; color:var(--ink-2); padding:12px 2px 8px; max-width:64ch}
+
+  .subseries{border-left:2px solid var(--rule); margin:8px 0 8px 2px; padding-left:0}
+  .sub-bar{display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:transparent;
+    border:0; cursor:pointer; padding:10px 8px; font-family:var(--sans)}
+  .sub-bar:hover{background:var(--panel)}
+  .sub-bar .tw{width:16px; height:16px; display:grid; place-items:center; color:var(--accent)}
+  .sub-bar .tw svg{width:9px; height:9px; transition:transform .18s ease}
+  .subseries.collapsed .sub-bar .tw svg{transform:rotate(-90deg)}
+  .sub-bar .subtitle{flex:1; font-weight:600; font-size:.96rem; color:var(--ink)}
+  .sub-note{font-size:.86rem; font-style:italic; color:var(--ink-3); padding:0 8px 8px 34px; max-width:60ch}
+  .sub-body{padding-left:18px}
+  .subseries.collapsed .sub-body, .subseries.collapsed .sub-note{display:none}
+
+  .item{display:grid; grid-template-columns:74px 1fr; gap:14px; padding:13px 8px;
+    border-top:1px solid var(--rule-soft); align-items:start; scroll-margin-top:calc(var(--mh) + 16px)}
+  .item:first-child{border-top:0}
+  .item.hit{background:var(--mark); border-radius:8px}
+  .item .container{font-family:var(--mono); font-size:.72rem; color:var(--ink-2); line-height:1.5; padding-top:2px}
+  .item .container .cbox{display:inline-block; background:var(--paper); border:1px solid var(--rule);
+    border-radius:4px; padding:1px 6px}
+  .item.hit .container .cbox{background:#fff}
+  .item .container .nobox{color:var(--ink-3); font-style:normal; opacity:.7}
+  .item .body{min-width:0}
+  .item .ilabel{font-family:var(--sans); font-weight:700; font-size:.58rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:3px}
+  .item .ititle{font-family:var(--serif); font-size:1rem; line-height:1.45; color:var(--ink)}
+  .item .ititle .idate{font-family:var(--mono); font-size:.78rem; color:var(--ink-2); margin-left:8px; white-space:nowrap}
+  .item .imeta{margin-top:6px; display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.85rem; color:var(--ink-2)}
+  .item .imeta .mk{font-family:var(--sans); font-weight:600; font-size:.7rem; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--ink-3); margin-right:5px}
+  .item .imeta a{cursor:pointer}
+  .item .inote{margin-top:6px; font-size:.86rem; font-style:italic; color:var(--ink-3)}
+  .item .iabstract{margin-top:6px; font-size:.92rem; color:var(--ink-2); max-width:62ch}
+
+  .empty{font-family:var(--sans); font-size:.92rem; color:var(--ink-3); padding:26px 8px; text-align:center}
+
+  /* cite */
+  .cite{margin-top:30px; background:var(--panel); border:1px solid var(--rule); border-radius:12px; padding:20px 22px}
+  .cite h3{font-family:var(--sans); font-weight:700; font-size:.78rem; letter-spacing:.04em; margin:0 0 9px; color:var(--ink)}
+  .cite p{margin:0 0 6px; font-size:.94rem; color:var(--ink-2)}
+  .cite .perma{font-family:var(--mono); font-size:.78rem; color:var(--ink-2)}
+  .cite .updated{font-family:var(--sans); font-size:.72rem; color:var(--ink-3); margin-top:10px}
+
+  .backdrop{display:none}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    body{font-size:16px}
+    .app{grid-template-columns:1fr; gap:0; padding:0 18px}
+    .drawer-btn{display:inline-flex}
+    .rail{position:fixed; top:0; left:0; z-index:60; width:min(86vw,360px); height:100vh; max-height:none;
+      background:var(--paper); border-right:1px solid var(--rule); padding:20px 14px 40px;
+      transform:translateX(-102%); transition:transform .26s ease; box-shadow:0 0 40px rgba(0,0,0,.25)}
+    .app.nav-open .rail{transform:none}
+    .backdrop{display:block; position:fixed; inset:0; z-index:55; background:rgba(8,14,18,.45);
+      opacity:0; pointer-events:none; transition:opacity .26s ease}
+    .app.nav-open .backdrop{opacity:1; pointer-events:auto}
+    .doc{padding:24px 0 100px}
+    .masthead-in{padding:11px 18px; gap:12px}
+    .tools{flex-basis:100%; order:3}
+    .brand{flex:1 1 auto}
+    .item{grid-template-columns:1fr; gap:6px}
+    .item .container{padding-top:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto !important; transition:none !important}
+  }
+  html{scroll-behavior:smooth}
+
+  /* ---------- site navigation bar (multi-page, non-sticky) ---------- */
+  .aid-sitebar{background:var(--chrome-2); border-bottom:1px solid rgba(0,0,0,.35); color:var(--dim-on-chrome); font-family:var(--sans)}
+  .aid-sitebar .sb-in{max-width:calc(var(--rail-w) + var(--maxw) + 120px); margin:0 auto; padding:9px 28px; display:flex; align-items:center; gap:16px; font-size:.8rem}
+  .aid-sitebar a{color:var(--dim-on-chrome); text-decoration:none}
+  .aid-sitebar a:hover{color:var(--paper-on-chrome)}
+  .aid-sitebar .sb-brand{display:flex; align-items:center; gap:8px; font-weight:800; letter-spacing:.14em; color:#fff}
+  .aid-sitebar .sb-mark{width:15px; height:17px; background:linear-gradient(135deg,var(--accent-bright) 0 46%,transparent 46%),linear-gradient(var(--accent) 0 0); border-radius:2px}
+  .aid-sitebar .sb-crumbs{display:flex; gap:8px; align-items:center; min-width:0}
+  .aid-sitebar .sb-crumbs a{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .aid-sitebar .sb-crumbs span{color:#3a4f5e}
+  .aid-sitebar .sb-taro{margin-left:auto; white-space:nowrap}
+  @media (max-width:720px){ .aid-sitebar .sb-crumbs{display:none} }
+</style>
+</head>
+<body>
+<div class="aid-sitebar">
+  <div class="sb-in">
+    <a class="sb-brand" href="index.html"><span class="sb-mark" aria-hidden="true"></span>TARO</a>
+    <nav class="sb-crumbs" aria-label="Breadcrumb">
+      <a href="index.html">Repositories</a><span aria-hidden="true">/</span><a id="sb-repo" href="index.html">Repository</a>
+    </nav>
+    <a id="sb-taro" class="sb-taro" href="https://txarchives.org" target="_blank" rel="noopener">View on TARO &#8599;</a>
+  </div>
+</div>
+<header class="masthead">
+  <div class="masthead-in">
+    <button class="drawer-btn" id="drawerBtn" aria-label="Open contents" aria-expanded="false">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M1 3h14M1 8h14M1 13h14" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+      Contents
+    </button>
+    <div class="brand">
+      <span class="repo" id="mh-repo"></span>
+      <span class="ttl" id="mh-title"></span>
+    </div>
+    <div class="tools">
+      <div class="search" id="searchWrap">
+        <svg class="mag" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11 11l4 4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+        <input id="search" type="search" placeholder="Search within this finding aid" autocomplete="off" aria-label="Search within this finding aid" />
+        <button class="clear" id="searchClear" aria-label="Clear search">&times;</button>
+      </div>
+      <span class="count" id="searchCount" hidden></span>
+    </div>
+  </div>
+</header>
+
+<div class="app" id="app">
+  <nav class="rail" id="rail" aria-label="Finding aid contents"></nav>
+  <main class="doc" id="doc" aria-live="polite"></main>
+  <div class="backdrop" id="backdrop"></div>
+</div>
+<script>
+window.__BOOT__ = function(eadText){
+  "use strict";
+
+  /* ============================ helpers ============================ */
+  const XLINK = 'http://www.w3.org/1999/xlink';
+  const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const ln  = el => (el.localName||'').toLowerCase();
+  const kids = (el,n) => el ? [...el.children].filter(c => ln(c)===n) : [];
+  const kid  = (el,n) => kids(el,n)[0] || null;
+  const descs = (el,n) => el ? [...el.getElementsByTagName('*')].filter(c => ln(c)===n) : [];
+  const txt  = el => el ? (el.textContent||'').replace(/\s+/g,' ').trim() : '';
+  const enDash = s => String(s||'').replace(/(\d)\s*-\s*(\d)/g,'$1\u2013$2');
+  const xlinkHref = el => el.getAttributeNS(XLINK,'href') || el.getAttribute('xlink:href') || el.getAttribute('href') || '';
+  const slug = s => String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+  // inline rich text: convert the small set of inline EAD elements present
+  function richInline(node){
+    let out='';
+    for(const ch of node.childNodes){
+      if(ch.nodeType===3){ out += esc(ch.nodeValue); continue; }
+      if(ch.nodeType!==1) continue;
+      const n = ln(ch), r = (ch.getAttribute('render')||'').toLowerCase();
+      if(n==='title'){ out += r==='bold' ? `<strong>${richInline(ch)}</strong>` : `<em>${richInline(ch)}</em>`; }
+      else if(n==='emph'){ out += r.includes('bold') ? `<strong>${richInline(ch)}</strong>` : `<em>${richInline(ch)}</em>`; }
+      else if(['extref','ref','extptr','archref','linkgrp'].includes(n)){
+        const href = xlinkHref(ch), inner = richInline(ch) || esc(href);
+        out += href ? `<a href="${esc(href)}" target="_blank" rel="noopener">${inner}</a>` : inner;
+      }
+      else if(n==='lb'){ out += '<br>'; }
+      else { out += richInline(ch); }
+    }
+    return out.replace(/\s+/g,' ').trim();
+  }
+  function renderBlocks(el){
+    if(!el) return '';
+    const bibs = kids(el,'bibref');
+    if(bibs.length) return `<ul class="biblist">${bibs.map(b=>`<li>${richInline(b)}</li>`).join('')}</ul>`;
+    const ps = kids(el,'p');
+    if(ps.length) return ps.map(p=>`<p>${richInline(p)}</p>`).join('');
+    const t = txt(el);
+    return t ? `<p>${esc(t)}</p>` : '';
+  }
+
+  /* ============================ parse ============================ */
+  const xml = new DOMParser().parseFromString(
+    eadText, 'application/xml');
+  const perr = xml.querySelector('parsererror');
+  const root = xml.documentElement;
+  const arch = descs(root,'archdesc')[0];
+  const frontDid = kid(arch,'did');
+
+  let cseq = 0;
+  function parseComponent(el){
+    const did = kid(el,'did');
+    const level = el.getAttribute('level') || 'item';
+    const domId = el.getAttribute('id') ? 'c-'+el.getAttribute('id') : 'c-'+(++cseq);
+
+    // title with dates normalized out
+    let titleHtml='', label=null;
+    const dates=[];
+    const ut = kid(did,'unittitle');
+    if(ut){
+      label = (ut.getAttribute('label')||'').replace(/:\s*$/,'').trim() || null;
+      descs(ut,'unitdate').forEach(d => dates.push({label:(d.getAttribute('label')||'').replace(/:\s*$/,'').trim()||null, text:enDash(txt(d))}));
+      const clone = ut.cloneNode(true);
+      [...clone.getElementsByTagName('*')].forEach(e=>{ if(ln(e)==='unitdate') e.remove(); });
+      titleHtml = richInline(clone).replace(/[\s,;]+$/,'').trim();
+    }
+    kids(did,'unitdate').forEach(d => dates.push({label:(d.getAttribute('label')||'').replace(/:\s*$/,'').trim()||null, text:enDash(txt(d))}));
+
+    const containers = kids(did,'container').map(c=>({type:(c.getAttribute('type')||'').toLowerCase(), text:txt(c)}));
+    const abstract = (kid(did,'abstract')) ? richInline(kid(did,'abstract')) : '';
+    const notes = kids(did,'note').map(n=>renderBlocks(n)).filter(Boolean);
+    const origination = kids(did,'origination').map(o=>({label:(o.getAttribute('label')||'').replace(/:\s*$/,'').trim()||null, text:txt(o)}));
+
+    const access=[];
+    const ca = kid(el,'controlaccess');
+    if(ca){
+      [...ca.children].forEach(t=>{
+        const k = ln(t);
+        if(['geogname','persname','corpname','famname','subject','genreform','name','function','occupation'].includes(k)){
+          access.push({kind:k, role:(t.getAttribute('role')||'').replace(/:\s*$/,'').trim()||null, text:txt(t)});
+        }
+      });
+    }
+
+    const children = [...el.children]
+      .filter(c => /^c(\d{2})?$/.test(ln(c)))
+      .map(parseComponent);
+
+    return {domId, level, label, titleHtml, dates, containers, abstract, notes, origination, access, children};
+  }
+
+  function collectBoxes(node, set){
+    node.containers.filter(c=>c.type==='box').forEach(c=>set.add(c.text));
+    node.children.forEach(c=>collectBoxes(c,set));
+    return set;
+  }
+  function countLeaves(node){
+    if(!node.children.length) return 1;
+    return node.children.reduce((s,c)=>s+countLeaves(c),0);
+  }
+  function formatBoxes(arr){
+    const nums = arr.map(x=>parseInt(x,10)).filter(n=>!isNaN(n)).sort((a,b)=>a-b);
+    if(!arr.length) return null;
+    if(nums.length===arr.length && nums.length>1 && nums[nums.length-1]-nums[0]===nums.length-1)
+      return `Boxes ${nums[0]}\u2013${nums[nums.length-1]}`;
+    if(arr.length===1) return `Box ${arr[0]}`;
+    return 'Boxes ' + arr.join(', ');
+  }
+
+  // front matter
+  const FM = {
+    eadid: txt(descs(root,'eadid')[0]),
+    titleproper: txt(descs(root,'titleproper')[0]),
+    publisher: txt(descs(root,'publisher')[0]),
+    title: txt(kid(frontDid,'unittitle')),
+    creator: txt(kid(frontDid,'origination')),
+    dates: kids(frontDid,'unitdate').map(d=>enDash(txt(d))),
+    extents: descs(kid(frontDid,'physdesc') || frontDid,'extent').map(txt),
+    unitid: txt(kid(frontDid,'unitid')),
+    languages: descs(kid(frontDid,'langmaterial') || frontDid,'language').map(txt),
+    abstract: kid(frontDid,'abstract') ? richInline(kid(frontDid,'abstract')) : '',
+    repoText: txt(kid(frontDid,'repository')),
+    repoHref: (()=>{ const r=kid(frontDid,'repository'); const x=r?descs(r,'extref')[0]:null; return x?xlinkHref(x):''; })()
+  };
+  const updated = (()=>{ const ds = descs(root,'change').map(c=>txt(kid(c,'date'))).filter(Boolean); return ds[ds.length-1]||''; })();
+
+  // narrative sections, in document order (everything in archdesc that isn't did/controlaccess/dsc)
+  const NAV = {
+    bioghist:'Biographical note', scopecontent:'Scope & content', arrangement:'Arrangement',
+    accessrestrict:'Access & use', userestrict:'Use restrictions', prefercite:'Preferred citation',
+    acqinfo:'Acquisition', custodhist:'Custodial history', processinfo:'Processing note',
+    appraisal:'Appraisal', accruals:'Accruals', relatedmaterial:'Related material',
+    separatedmaterial:'Separated material', otherfindaid:'Other finding aids',
+    bibliography:'Bibliography', odd:'Note', originalsloc:'Originals', altformavail:'Alternative formats'
+  };
+  const sections = [];
+  [...arch.children].forEach(el=>{
+    const n = ln(el);
+    if(['did','controlaccess','dsc'].includes(n)) return;
+    if(!(n in NAV)) return;
+    const head = txt(kid(el,'head')) || NAV[n];
+    const html = renderBlocks(el);
+    if(html) sections.push({domId:'sec-'+slug(n+'-'+(el.getAttribute('id')||'')), navLabel:NAV[n], head, html});
+  });
+
+  // index terms — de-duplicate groups by head, terms by text
+  const termGroups=[];
+  const topCA = kids(arch,'controlaccess')[0];
+  if(topCA){
+    const groups = kids(topCA,'controlaccess');
+    const seenGroup = new Map();
+    groups.forEach(g=>{
+      const head = txt(kid(g,'head')) || 'Terms';
+      const terms = [...g.children].filter(c=>ln(c)!=='head').map(c=>({kind:ln(c), text:txt(c)})).filter(t=>t.text);
+      if(seenGroup.has(head)){
+        const ex = seenGroup.get(head);
+        const have = new Set(ex.terms.map(t=>t.text));
+        terms.forEach(t=>{ if(!have.has(t.text)){ ex.terms.push(t); have.add(t.text); } });
+      } else {
+        const obj = {head, terms:[]}; const have=new Set();
+        terms.forEach(t=>{ if(!have.has(t.text)){ obj.terms.push(t); have.add(t.text); } });
+        seenGroup.set(head,obj); termGroups.push(obj);
+      }
+    });
+  }
+
+  // contents tree
+  const dsc = kid(arch,'dsc');
+  const dscHead = dsc ? (txt(kid(dsc,'head')) || 'Detailed description') : 'Detailed description';
+  const dscIntro = dsc ? kids(dsc,'p').map(p=>richInline(p)).join(' ') : '';
+  const topComponents = dsc ? [...dsc.children].filter(c=>/^c(\d{2})?$/.test(ln(c))).map(parseComponent) : [];
+
+  /* ============================ render: main ============================ */
+  document.getElementById('mh-repo').textContent = FM.repoText.replace(/\s+/g,' ').split(',')[0] || FM.publisher;
+  document.getElementById('mh-title').innerHTML = `<a href="#summary">${esc(FM.title)}</a>`;
+
+  function specRow(dt, dd, serif){ return dd ? `<div class="spec"><dt>${esc(dt)}</dt><dd class="${serif?'serif':''}">${dd}</dd></div>` : ''; }
+
+  const doc = document.getElementById('doc');
+  let html = '';
+
+  // 1. summary / title block
+  html += `<section class="block" id="summary" data-nav>
+    <p class="eyebrow">Collection summary</p>
+    <div class="titleblock">
+      <p class="kicker">${esc(FM.repoText.replace(/\s+/g,' '))}</p>
+      <h1>${esc(FM.title)}</h1>
+      ${FM.creator?`<p class="creator">${esc(FM.creator)}</p>`:''}
+      <dl class="specs">
+        ${specRow('Dates', enDash(FM.dates.join('  ·  ')) )}
+        ${specRow('Extent', FM.extents.join('  ·  '), true)}
+        ${specRow('Identifier', esc(FM.unitid))}
+        ${specRow('Language', esc([...new Set(FM.languages)].join(', ')), true)}
+        ${specRow('Repository', FM.repoHref?`<a href="${esc(FM.repoHref)}" target="_blank" rel="noopener">${esc(FM.repoText.split(',')[0])}</a>`:esc(FM.repoText.split(',')[0]), true)}
+      </dl>
+      ${FM.abstract?`<p class="lead"><span class="label">Abstract</span>${FM.abstract}</p>`:''}
+    </div>
+  </section>`;
+
+  // 2. narrative sections
+  sections.forEach(s=>{
+    html += `<section class="block section" id="${s.domId}" data-nav>
+      <p class="eyebrow">${esc(s.navLabel)}</p>
+      <h2>${esc(s.head)}</h2>
+      <div class="prose">${s.html}</div>
+    </section>`;
+  });
+
+  // 3. index terms
+  if(termGroups.length){
+    const kIcon = `<svg class="k" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12M8 2v12" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>`;
+    html += `<section class="block section" id="index-terms" data-nav>
+      <p class="eyebrow">Index terms</p>
+      <h2>Subjects &amp; names</h2>
+      <p class="prose" style="color:var(--ink-2);font-size:.95rem;max-width:64ch;margin-bottom:18px">Select a term to search this finding aid for it. In a full repository deployment these link out to every collection sharing the term.</p>
+      <div class="termgroups">
+        ${termGroups.map(g=>`<div class="termgroup">
+          <h3>${esc(g.head)}</h3>
+          <div class="chips">${g.terms.map(t=>`<button class="chip" data-term="${esc(t.text)}" type="button">${kIcon}${esc(t.text)}</button>`).join('')}</div>
+        </div>`).join('')}
+      </div>
+    </section>`;
+  }
+
+  // 4. contents (dsc)
+  function renderItem(node){
+    const dateStr = node.dates.map(d=>d.text).filter(Boolean).join(', ');
+    const box = node.containers.length
+      ? node.containers.map(c=>`<span class="cbox">${esc((c.type?c.type:'')+' '+c.text).trim()}</span>`).join(' ')
+      : `<span class="nobox">—</span>`;
+    const metaBits=[];
+    node.origination.forEach(o=> metaBits.push(`<span><span class="mk">${esc(o.label||'Creator')}</span>${esc(o.text)}</span>`));
+    node.access.forEach(a=> metaBits.push(`<span><span class="mk">${esc(a.role|| (a.kind==='geogname'?'Place':a.kind==='persname'?'Name':'Term'))}</span><a class="chip-link" data-term="${esc(a.text)}">${esc(a.text)}</a></span>`));
+    return `<div class="item" id="${node.domId}" data-search="${esc(searchText(node))}">
+      <div class="container">${box}</div>
+      <div class="body">
+        ${node.label?`<div class="ilabel">${esc(node.label)}</div>`:''}
+        <div class="ititle"><span class="ttext">${node.titleHtml||'<em>Untitled component</em>'}</span>${dateStr?`<span class="idate">${esc(dateStr)}</span>`:''}</div>
+        ${metaBits.length?`<div class="imeta">${metaBits.join('')}</div>`:''}
+        ${node.notes.map(n=>`<div class="inote">${n.replace(/^<p>|<\/p>$/g,'')}</div>`).join('')}
+        ${node.abstract?`<div class="iabstract">${node.abstract}</div>`:''}
+      </div>
+    </div>`;
+  }
+  function renderSub(node){
+    const inner = node.children.map(c=> c.children.length?renderSub(c):renderItem(c)).join('') || `<div class="empty">No items listed.</div>`;
+    const note = node.notes.map(n=>n.replace(/<\/?p>/g,'')).join(' ');
+    return `<div class="subseries" id="${node.domId}" data-search="${esc(searchText(node))}">
+      <button class="sub-bar" aria-expanded="true" data-toggle="sub">
+        <span class="tw"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3l3 4 3-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="subtitle"><span class="ttext">${node.titleHtml||'Subseries'}</span>${node.dates.length?` <span style="font-family:var(--mono);font-size:.72rem;color:var(--ink-3)">${esc(node.dates.map(d=>d.text).join(', '))}</span>`:''}</span>
+      </button>
+      ${note?`<div class="sub-note">${note}</div>`:''}
+      <div class="sub-body">${inner}</div>
+    </div>`;
+  }
+  function renderSeries(node){
+    const boxes = formatBoxes([...collectBoxes(node,new Set())]);
+    const leaves = countLeaves(node);
+    const tag = [boxes, `${leaves} item${leaves===1?'':'s'}`].filter(Boolean).join(' · ');
+    const datesStr = node.dates.map(d=>d.text).join(', ');
+    const abstract = node.children.length ? '' : '';
+    // series-level scope note lives as a child <scopecontent> in EAD; pull from raw via stored note? we approximate with notes/abstract
+    const inner = node.children.map(c=> c.children.length?renderSub(c):renderItem(c)).join('') || `<div class="empty">No components listed.</div>`;
+    return `<div class="series" id="${node.domId}" data-search="${esc(searchText(node))}">
+      <button class="series-bar" aria-expanded="true" data-toggle="series">
+        <span class="tw"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4l3 4 3-4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="sname"><span class="stitle">${node.titleHtml||'Series'}</span>${datesStr?`<span class="smeta">${esc(datesStr)}</span>`:''}</span>
+        ${tag?`<span class="stag">${esc(tag)}</span>`:''}
+      </button>
+      <div class="series-body">
+        ${node.scopeHtml?`<div class="series-abstract">${node.scopeHtml}</div>`:''}
+        ${inner}
+      </div>
+    </div>`;
+  }
+
+  // attach series-level scope notes (a <scopecontent> sibling of <did> inside c01) — re-read raw
+  if(dsc){
+    const rawSeries = [...dsc.children].filter(c=>/^c(\d{2})?$/.test(ln(c)));
+    rawSeries.forEach((raw,i)=>{
+      const sc = kid(raw,'scopecontent');
+      if(sc && topComponents[i]) topComponents[i].scopeHtml = renderBlocks(sc);
+    });
+  }
+
+  html += `<section class="block" id="contents" data-nav>
+    <div class="dsc-head">
+      <div>
+        <p class="eyebrow">Contents</p>
+        <h2>${esc(dscHead)}</h2>
+      </div>
+      <div class="dsc-actions">
+        <button class="btn-ghost" id="expandAll" type="button">Expand all</button>
+        <button class="btn-ghost" id="collapseAll" type="button">Collapse all</button>
+      </div>
+    </div>
+    ${dscIntro?`<p class="prose" style="color:var(--ink-2);font-size:.96rem;max-width:64ch">${dscIntro}</p>`:''}
+    <div id="dsc">${topComponents.map(renderSeries).join('')}</div>
+  </section>`;
+
+  // cite
+  html += `<section class="cite block" id="cite">
+    <h3>Cite this collection</h3>
+    ${(()=>{ const pc = sections.find(s=>s.navLabel==='Preferred citation'); return pc ? pc.html : `<p>${esc(FM.title)}, ${esc(FM.repoText.replace(/\s+/g,' '))}</p>`; })()}
+    ${FM.eadid?`<p class="perma">Permalink: ${esc(FM.eadid)}</p>`:''}
+    ${updated?`<p class="updated">Finding aid last updated ${esc(updated)}.</p>`:''}
+  </section>`;
+
+  doc.innerHTML = html;
+
+  /* ============================ render: rail ============================ */
+  const rail = document.getElementById('rail');
+  const railLinks = [{id:'summary',label:'Summary'}, ...sections.map(s=>({id:s.domId,label:s.navLabel}))];
+  if(termGroups.length) railLinks.push({id:'index-terms',label:'Index terms'});
+
+  function railNode(node){
+    const hasKids = node.children.length>0;
+    const boxes = node.level==='series' ? formatBoxes([...collectBoxes(node,new Set())])
+                : (node.containers.find(c=>c.type==='box') ? 'b'+node.containers.find(c=>c.type==='box').text : '');
+    const chip = boxes ? `<span class="boxchip">${esc(boxes.replace('Boxes','Bx').replace('Box','Bx'))}</span>` : '';
+    const title = (node.titleHtml||'Component').replace(/<[^>]+>/g,'');
+    return `<li class="node" data-level="${esc(node.level)}" data-target="${node.domId}" data-search="${esc(searchText(node))}">
+      <div class="row">
+        <button class="twist ${hasKids?'':'leaf'}" ${hasKids?'aria-expanded="true"':''} aria-label="Toggle">
+          <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3l3 4 3-4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <a class="label" href="#${node.domId}"><span class="ltext">${esc(title)}</span>${chip}</a>
+      </div>
+      ${hasKids?`<ul role="group">${node.children.map(railNode).join('')}</ul>`:''}
+    </li>`;
+  }
+
+  rail.innerHTML = `
+    <div class="rail-group">
+      <p class="rail-eyebrow">Description</p>
+      ${railLinks.map(l=>`<a class="navlink" href="#${l.id}" data-spy="${l.id}">${esc(l.label)}</a>`).join('')}
+    </div>
+    <div class="rail-group">
+      <div class="rail-head-row">
+        <p class="rail-eyebrow">Contents</p>
+        <div class="rail-actions"><button id="railExpand" type="button">Expand</button><button id="railCollapse" type="button">Collapse</button></div>
+      </div>
+      <a class="navlink" href="#contents" data-spy="contents" style="font-weight:600;margin-bottom:4px">${esc(dscHead)}</a>
+      <ul class="tree" role="tree">${topComponents.map(railNode).join('')}</ul>
+    </div>`;
+
+  /* ============================ behavior ============================ */
+  // search text for a node: title + dates + notes + names + abstract
+  function searchText(node){
+    const parts=[node.titleHtml.replace(/<[^>]+>/g,''), node.dates.map(d=>d.text).join(' '),
+      node.origination.map(o=>o.text).join(' '), node.access.map(a=>a.text).join(' '),
+      node.notes.join(' ').replace(/<[^>]+>/g,''), node.abstract.replace(/<[^>]+>/g,''), node.label||''];
+    return parts.join(' ').toLowerCase();
+  }
+  // searchText is referenced above during render; hoisted via function declaration. OK.
+
+  const app = document.getElementById('app');
+
+  // measure masthead height -> CSS var
+  const masthead = document.querySelector('.masthead');
+  function measure(){ document.documentElement.style.setProperty('--mh', masthead.offsetHeight+'px'); }
+  measure(); window.addEventListener('resize', measure);
+  if(window.ResizeObserver) new ResizeObserver(measure).observe(masthead);
+
+  // collapse / expand — main dsc
+  function setSeries(open){ document.querySelectorAll('#dsc .series').forEach(s=>{ s.classList.toggle('collapsed',!open); const b=s.querySelector('.series-bar'); if(b) b.setAttribute('aria-expanded',String(open)); }); }
+  function setAllMain(open){ setSeries(open); document.querySelectorAll('#dsc .subseries').forEach(s=>{ s.classList.toggle('collapsed',!open); const b=s.querySelector('.sub-bar'); if(b) b.setAttribute('aria-expanded',String(open)); }); }
+  doc.addEventListener('click', e=>{
+    const bar = e.target.closest('[data-toggle]');
+    if(bar){
+      const wrap = bar.closest(bar.dataset.toggle==='series'?'.series':'.subseries');
+      const open = wrap.classList.toggle('collapsed');
+      bar.setAttribute('aria-expanded', String(!open));
+      return;
+    }
+    const chip = e.target.closest('[data-term]');
+    if(chip){ runSearch(chip.dataset.term, true); }
+  });
+  document.getElementById('expandAll').onclick = ()=>setAllMain(true);
+  document.getElementById('collapseAll').onclick = ()=>setAllMain(false);
+
+  // rail twists + expand/collapse
+  rail.addEventListener('click', e=>{
+    const tw = e.target.closest('.twist');
+    if(tw && !tw.classList.contains('leaf')){
+      e.preventDefault();
+      const node = tw.closest('.node');
+      const collapsed = node.classList.toggle('collapsed');
+      tw.setAttribute('aria-expanded', String(!collapsed));
+      return;
+    }
+    const link = e.target.closest('a.label, a.navlink');
+    if(link && window.innerWidth<=900){ closeDrawer(); }
+  });
+  function setRailTree(open){ rail.querySelectorAll('.tree .node').forEach(n=>{ if(n.querySelector('ul')){ n.classList.toggle('collapsed',!open); const t=n.querySelector(':scope > .row .twist'); if(t) t.setAttribute('aria-expanded',String(open)); } }); }
+  document.getElementById('railExpand').onclick = ()=>setRailTree(true);
+  document.getElementById('railCollapse').onclick = ()=>setRailTree(false);
+
+  // mobile drawer
+  const drawerBtn = document.getElementById('drawerBtn');
+  const backdrop = document.getElementById('backdrop');
+  function openDrawer(){ app.classList.add('nav-open'); drawerBtn.setAttribute('aria-expanded','true'); }
+  function closeDrawer(){ app.classList.remove('nav-open'); drawerBtn.setAttribute('aria-expanded','false'); }
+  drawerBtn.onclick = ()=> app.classList.contains('nav-open')?closeDrawer():openDrawer();
+  backdrop.onclick = closeDrawer;
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
+
+  // scrollspy
+  const spyTargets = [...document.querySelectorAll('[data-nav], #dsc .series, #dsc .subseries, #dsc .item')];
+  const spyMap = new Map();
+  document.querySelectorAll('[data-spy]').forEach(a=>spyMap.set(a.dataset.spy,a));
+  document.querySelectorAll('.tree .node').forEach(n=>spyMap.set(n.dataset.target,n));
+  let activeId=null;
+  function setActive(id){
+    if(id===activeId) return; activeId=id;
+    document.querySelectorAll('.navlink.active').forEach(a=>a.classList.remove('active'));
+    document.querySelectorAll('.tree .node .row.active').forEach(r=>r.classList.remove('active'));
+    // light the closest mapped ancestor (sections map directly; items map to themselves or nearest series)
+    let el = spyMap.get(id);
+    if(el){
+      if(el.classList.contains('navlink')) el.classList.add('active');
+      else { const row = el.querySelector(':scope > .row'); if(row){ row.classList.add('active'); ensureVisibleInRail(row); } }
+    }
+  }
+  function ensureVisibleInRail(row){
+    if(window.innerWidth<=900) return;
+    const rb=row.getBoundingClientRect(), nb=rail.getBoundingClientRect();
+    if(rb.top < nb.top+30) rail.scrollTop -= (nb.top+30 - rb.top);
+    else if(rb.bottom > nb.bottom-20) rail.scrollTop += (rb.bottom - (nb.bottom-20));
+  }
+  // active section = last target whose top has scrolled above the band line under the masthead
+  let spyTick=false;
+  function computeActive(){
+    const band = masthead.offsetHeight + 92;
+    let current=null;
+    spyTargets.forEach(t=>{ if(t.getBoundingClientRect().top - band <= 0) current=t; });
+    if(current && current.id) setActive(current.id);
+    spyTick=false;
+  }
+  window.addEventListener('scroll', ()=>{ if(!spyTick){ spyTick=true; requestAnimationFrame(computeActive); } }, {passive:true});
+  window.addEventListener('resize', computeActive);
+  computeActive();
+
+  // ---- search ----
+  const input = document.getElementById('search');
+  const searchWrap = document.getElementById('searchWrap');
+  const countEl = document.getElementById('searchCount');
+  const clearBtn = document.getElementById('searchClear');
+  const tree = rail.querySelector('.tree');
+  let debounce;
+
+  function highlight(el, q){
+    // Only the title-text spans are re-rendered; date/box siblings live outside these
+    // spans, so they are never clobbered. Titles in this finding aid are plain text.
+    el.querySelectorAll('.ttext, .ltext, .stitle').forEach(t=>{
+      if(!t.hasAttribute('data-raw')) t.setAttribute('data-raw', t.textContent);
+      const raw = t.getAttribute('data-raw');
+      if(!q){ t.innerHTML = esc(raw); return; }
+      const rx = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+      t.innerHTML = esc(raw).replace(rx,'<mark>$1</mark>');
+    });
+  }
+
+  function runSearch(q, fromChip){
+    q = (q||'').trim();
+    input.value = q;
+    searchWrap.classList.toggle('has-q', !!q);
+    const ql = q.toLowerCase();
+
+    // items + subseries + series. Main column stays fully visible during search so
+    // matched items keep their hierarchical context; we mark hits and expand to them.
+    let hits=0;
+    document.querySelectorAll('#dsc .item').forEach(it=>{
+      const match = ql && (it.dataset.search||'').includes(ql);
+      it.classList.toggle('hit', !!match);
+      if(match) hits++;
+    });
+
+    document.querySelectorAll('#dsc .series, #dsc .subseries').forEach(w=>{
+      const hasHit = ql && (w.dataset.search||'').includes(ql) || (ql && !!w.querySelector('.item.hit'));
+      if(ql && hasHit){ w.classList.remove('collapsed'); const b=w.querySelector('.series-bar,.sub-bar'); if(b) b.setAttribute('aria-expanded','true'); }
+    });
+
+    // narrative sections: flag the ones containing the query
+    document.querySelectorAll('.section').forEach(s=>{
+      const has = ql && s.textContent.toLowerCase().includes(ql);
+      s.classList.toggle('hit', !!has);
+    });
+
+    // title highlight in main + rail
+    highlight(doc, q);
+    highlight(rail, q);
+
+    // rail tree filter
+    if(ql){
+      tree.classList.add('searching');
+      tree.querySelectorAll('.node').forEach(n=>{ n.classList.remove('hit','ancestor','miss'); });
+      tree.querySelectorAll('.node').forEach(n=>{
+        const match = (n.dataset.search||'').includes(ql);
+        if(match){
+          n.classList.add('hit'); n.classList.remove('collapsed');
+          let p=n.parentElement && n.parentElement.closest('.node');
+          while(p){ p.classList.add('ancestor'); p.classList.remove('collapsed','miss'); const t=p.querySelector(':scope > .row .twist'); if(t) t.setAttribute('aria-expanded','true'); p=p.parentElement.closest('.node'); }
+        }
+      });
+      tree.querySelectorAll('.node').forEach(n=>{ if(!n.classList.contains('hit') && !n.classList.contains('ancestor')) n.classList.add('miss'); });
+    } else {
+      tree.classList.remove('searching');
+      tree.querySelectorAll('.node').forEach(n=>n.classList.remove('hit','ancestor','miss'));
+    }
+
+    // count
+    if(ql){ countEl.hidden=false; countEl.textContent = hits ? `${hits} item match${hits===1?'':'es'}` : 'No item matches'; }
+    else { countEl.hidden=true; }
+
+    if(fromChip){ document.getElementById('contents').scrollIntoView({behavior:'smooth'}); }
+  }
+  input.addEventListener('input', ()=>{ clearTimeout(debounce); debounce=setTimeout(()=>runSearch(input.value), 160); });
+  clearBtn.onclick = ()=>{ runSearch(''); input.focus(); };
+  input.addEventListener('keydown', e=>{ if(e.key==='Escape'){ runSearch(''); } });
+
+  // keyboard: '/' focuses search
+  document.addEventListener('keydown', e=>{
+    if(e.key==='/' && document.activeElement!==input && !/input|textarea/i.test(document.activeElement.tagName)){
+      e.preventDefault(); input.focus();
+    }
+  });
+
+  // open hash target on load
+  if(location.hash){ const t=document.getElementById(location.hash.slice(1)); if(t){ const s=t.closest('.series'); if(s) s.classList.remove('collapsed'); const ss=t.closest('.subseries'); if(ss) ss.classList.remove('collapsed'); setTimeout(()=>t.scrollIntoView(),60); } }
+
+  if(perr){ doc.innerHTML = `<section class="block section"><h2>Could not parse the EAD source</h2><p class="prose">The EAD document could not be parsed.</p></section>`; }
+};
+</script>
+
+<script type="module">
+import { CONFIG, loadRepositories, loadRepoAids, adminXmlUrl, formatDates, esc } from "./assets/site.js";
+
+const p = new URLSearchParams(location.search);
+const repo = p.get("repo") || "";
+const file = p.get("file") || "";
+
+const doc = document.getElementById("doc");
+const rail = document.getElementById("rail");
+const sbRepo = document.getElementById("sb-repo");
+const sbTaro = document.getElementById("sb-taro");
+
+const displayUrl = (repo && file)
+  ? `${CONFIG.DISPLAY_BASE}/${repo}/finding_aids/${file}`
+  : CONFIG.DISPLAY_BASE;
+sbTaro.href = displayUrl;
+
+// Breadcrumb: link to the repository, upgrade slug -> full name when available.
+if (repo) {
+  sbRepo.href = `repository.html?repo=${encodeURIComponent(repo)}`;
+  sbRepo.textContent = repo;
+  loadRepositories()
+    .then(({ repositories }) => {
+      const r = repositories.find((x) => x.slug === repo);
+      if (r) sbRepo.textContent = r.name;
+    })
+    .catch(() => {});
+}
+
+function note(html) { doc.innerHTML = html; }
+
+// EAD source: cached copy first (same-origin, CORS-free), then live from TARO.
+async function getEAD() {
+  try {
+    const r = await fetch(`${CONFIG.DATA}/eads/${repo}/${file}`);
+    if (r.ok) {
+      const t = await r.text();
+      if (t && t.includes("<ead")) return t;
+    }
+  } catch (_) {}
+  const r2 = await fetch(adminXmlUrl(repo, file, ""));
+  if (!r2.ok) throw new Error(`TARO returned HTTP ${r2.status}`);
+  const t2 = await r2.text();
+  if (!t2.includes("<ead")) throw new Error("response was not an EAD document");
+  return t2;
+}
+
+// Fallback: full EAD unavailable in-browser (usually a cross-origin block).
+// Show the metadata we already hold, plus a prominent link to TARO.
+async function fallback(err) {
+  if (rail) rail.style.display = "none";
+  let rec = null;
+  try {
+    const res = await loadRepoAids(repo);
+    rec = res.aids.find((a) => a.filename === file) || null;
+  } catch (_) {}
+  const title = rec ? rec.title : (file || "Finding aid").replace(/\.xml$/, "");
+  document.title = `${title} — TARO`;
+  const mhRepo = document.getElementById("mh-repo");
+  const mhTitle = document.getElementById("mh-title");
+  if (mhRepo) mhRepo.textContent = (rec && rec.repositoryName) || repo;
+  if (mhTitle) mhTitle.textContent = title;
+
+  const bits = [];
+  if (rec) {
+    const d = formatDates(rec);
+    if (d) bits.push(`<p class="prose"><strong>Dates:</strong> ${esc(d)}</p>`);
+    if (rec.creators.length) bits.push(`<p class="prose"><strong>Creator:</strong> ${esc(rec.creators.join("; "))}</p>`);
+    if (rec.extents.length) bits.push(`<p class="prose"><strong>Extent:</strong> ${esc(rec.extents.join("; "))}</p>`);
+    if (rec.abstract) bits.push(`<p class="prose">${esc(rec.abstract)}</p>`);
+    if (rec.subjects.length) bits.push(`<p class="prose"><strong>Subjects:</strong> ${esc(rec.subjects.slice(0, 12).join(" \u00b7 "))}</p>`);
+  }
+  note(`
+    <section class="block section" style="max-width:720px">
+      <h1 style="font-family:var(--sans); letter-spacing:-.01em">${esc(title)}</h1>
+      ${bits.join("") || `<p class="prose">A cached summary for this finding aid isn’t available.</p>`}
+      <div style="margin-top:18px; padding:16px 18px; border:1px solid var(--rule); border-radius:10px; background:var(--panel)">
+        <p class="prose" style="margin:0 0 10px">The full finding aid couldn’t be loaded directly in your browser${err ? ` (${esc(String(err.message || err))})` : ""}. This usually means TARO didn’t allow a cross-origin request for the raw EAD. The complete finding aid is available on TARO:</p>
+        <p style="margin:0"><a href="${esc(displayUrl)}" target="_blank" rel="noopener" style="font-family:var(--sans); font-weight:700">View the full finding aid on TARO &#8599;</a></p>
+      </div>
+    </section>`);
+}
+
+(async () => {
+  if (!repo || !file) {
+    if (rail) rail.style.display = "none";
+    note(`<section class="block section"><h1>No finding aid specified</h1><p class="prose">Open this page from a <a href="index.html">repository list</a>.</p></section>`);
+    return;
+  }
+  note(`<section class="block section"><p class="prose">Loading finding aid…</p></section>`);
+  try {
+    const text = await getEAD();
+    doc.innerHTML = "";
+    if (rail) { rail.style.display = ""; rail.innerHTML = ""; }
+    window.__BOOT__(text);
+  } catch (e) {
+    await fallback(e);
+  }
+})();
+</script>
+
+<footer style="background:var(--chrome); color:var(--dim-on-chrome); font-family:var(--sans); font-size:.8rem">
+  <div style="max-width:calc(var(--rail-w) + var(--maxw) + 120px); margin:0 auto; padding:22px 28px; display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between">
+    <span style="max-width:60ch">Rendered from the repository’s EAD record. Description &amp; encoding belong to the contributing repository, via <a href="https://txarchives.org" style="color:var(--accent-bright)" rel="noopener">TARO</a>.</span>
+    <a href="index.html" style="color:var(--accent-bright)">All repositories</a>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "slug": "utaaa",
+  "name": "Alexander Architectural Archives, The University of Texas at Austin",
+  "generated": "2026-06-22T00:00:00Z",
+  "note": "Seed list. scripts/harvest.mjs replaces this with the live enumeration of the repository.",
+  "finding_aids": [
+    {
+      "title": "Weinreb Architectural collection",
+      "abstract": "The Weinreb Architectural collection comprises sketchbooks, architectural drawings, and photographs assembled by London antiquarian bookseller Ben Weinreb (1912\u20131999), including measured sketches of European buildings, drawings associated with the architect Oliver Hill, and lithographs.",
+      "digital": false,
+      "repository": "utaaa",
+      "repository_name": "Alexander Architectural Archives, The University of Texas at Austin",
+      "filename": "00085.xml",
+      "taro_identifier": "urn:taro:utexas.aaa.00085",
+      "languages": ["English", "Swedish", "French", "German"],
+      "creators": ["Weinreb, Ben, 1912-1999"],
+      "start_dates": ["1825", "1928"],
+      "end_dates": ["1890", "1932"],
+      "inclusive_dates": ["1825-1890", "1928-1932"],
+      "extents": ["14 sketchbooks", "17 drawings", "23 photographs"],
+      "subject_topics": ["Architecture", "Architectural drawing"],
+      "subject_persons": ["Hill, Oliver, 1887-1968", "Hellicar, Evelyn A."],
+      "display_site": "txarchives.org/utaaa/finding_aids/00085.xml",
+      "xml": "txarchives.org/admin/utaaa/00085.xml",
+      "has_local_ead": true
+    }
+  ]
+}

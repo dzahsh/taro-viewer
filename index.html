@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#15212A" />
+<title>TARO Finding Aids — Repositories</title>
+<meta name="description" content="Browse archival repositories and finding aids published on Texas Archival Resources Online (TARO)." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/taro.css" />
+</head>
+<body>
+<header class="masthead" data-masthead></header>
+
+<main class="wrap page">
+  <div class="pagehead">
+    <h1>Browse Texas archives</h1>
+    <p class="lede">Finding aids from archives, libraries, and museums across Texas. Choose a repository to see its collections, or search every finding aid at once.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="find">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="filter" type="search" placeholder="Filter repositories by name…" aria-label="Filter repositories by name" autocomplete="off" />
+    </div>
+    <span class="ctrl-count" id="repoCount"></span>
+  </div>
+
+  <div id="grid" class="grid" aria-live="polite"></div>
+  <div id="empty" class="state" hidden><h2>No repositories match that filter</h2><p>Try a different word, or clear the filter.</p></div>
+</main>
+
+<footer class="site-foot" data-footer></footer>
+
+<script type="module">
+import { loadRepositories, repoHref, esc, debounce, mountMasthead, mountFooter } from "./assets/site.js";
+
+mountMasthead();
+mountFooter();
+
+const grid = document.getElementById("grid");
+const empty = document.getElementById("empty");
+const countEl = document.getElementById("repoCount");
+const filter = document.getElementById("filter");
+let repos = [];
+
+function card(r){
+  return `<a class="repo-card" href="${repoHref(r.slug)}">
+    <div class="rname">${esc(r.name)}</div>
+    <div class="rmeta"><span class="slug">${esc(r.slug)}</span><span class="arrow" aria-hidden="true">View collections →</span></div>
+  </a>`;
+}
+
+function render(list){
+  grid.innerHTML = list.map(card).join("");
+  empty.hidden = list.length > 0;
+  countEl.textContent = list.length === repos.length
+    ? `${repos.length} repositories`
+    : `${list.length} of ${repos.length}`;
+}
+
+const applyFilter = debounce(() => {
+  const q = filter.value.trim().toLowerCase();
+  render(q ? repos.filter(r => r.name.toLowerCase().includes(q) || r.slug.toLowerCase().includes(q)) : repos);
+}, 120);
+filter.addEventListener("input", applyFilter);
+
+(async () => {
+  grid.innerHTML = `<div class="state"><div class="spinner"></div>Loading repositories…</div>`;
+  try {
+    const { repositories } = await loadRepositories();
+    repos = repositories;
+    render(repos);
+  } catch (e) {
+    grid.innerHTML = "";
+    empty.hidden = true;
+    grid.insertAdjacentHTML("beforeend",
+      `<div class="state error"><h2>Couldn’t load the repository list</h2><p>${esc(String(e.message||e))}</p></div>`);
+  }
+})();
+</script>
+</body>
+</html>

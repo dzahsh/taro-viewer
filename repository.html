@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#15212A" />
+<title>Finding Aids — TARO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/taro.css" />
+</head>
+<body>
+<header class="masthead" data-masthead></header>
+
+<main class="wrap page">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="index.html">Repositories</a><span class="sep">/</span><span id="crumbName">&#8230;</span>
+  </nav>
+
+  <div class="pagehead">
+    <h1 id="repoTitle">Loading&#8230;</h1>
+    <p class="count" id="repoSub"></p>
+  </div>
+
+  <div class="toolbar" id="toolbar" hidden>
+    <div class="find">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="find" type="search" placeholder="Filter within this repository&#8230;" aria-label="Filter finding aids" autocomplete="off" />
+    </div>
+    <label>Sort
+      <select id="sort">
+        <option value="title">Title (A&#8211;Z)</option>
+        <option value="title-desc">Title (Z&#8211;A)</option>
+        <option value="date-asc">Date (earliest)</option>
+        <option value="date-desc">Date (latest)</option>
+      </select>
+    </label>
+    <label style="display:flex"><input type="checkbox" id="digiOnly" /> Digitized only</label>
+    <span class="ctrl-count" id="listCount"></span>
+  </div>
+
+  <div id="list" aria-live="polite"></div>
+</main>
+
+<footer class="site-foot" data-footer></footer>
+
+<script type="module">
+import {
+  loadRepositories, loadRepoAids, aidHref, formatDates,
+  esc, debounce, mountMasthead, mountFooter
+} from "./assets/site.js";
+
+mountMasthead();
+mountFooter();
+
+const slug = new URLSearchParams(location.search).get("repo") || "";
+
+const crumbName = document.getElementById("crumbName");
+const repoTitle = document.getElementById("repoTitle");
+const repoSub = document.getElementById("repoSub");
+const toolbar = document.getElementById("toolbar");
+const listEl = document.getElementById("list");
+const findEl = document.getElementById("find");
+const sortEl = document.getElementById("sort");
+const digiEl = document.getElementById("digiOnly");
+const countEl = document.getElementById("listCount");
+
+let aids = [];
+let done = false;
+
+function dateKey(rec){ const m = (formatDates(rec).match(/\d{4}/) || [])[0]; return m ? parseInt(m,10) : 0; }
+
+function row(rec){
+  const dates = formatDates(rec);
+  const creator = rec.creators[0] || "";
+  const ext = rec.extents[0] || "";
+  return `<div class="aid-row">
+    <div>
+      <h2 class="atitle"><a href="${aidHref(rec)}">${esc(rec.title)}</a></h2>
+      ${rec.abstract ? `<p class="aabs">${esc(rec.abstract)}</p>` : ""}
+      <div class="ameta">
+        ${dates ? `<span class="dates">${esc(dates)}</span>` : ""}
+        ${creator ? `<span class="pill">${esc(creator)}</span>` : ""}
+        ${ext ? `<span class="pill">${esc(ext)}</span>` : ""}
+        ${rec.digital ? `<span class="pill digi">Digitized</span>` : ""}
+      </div>
+    </div>
+    <a class="go" href="${aidHref(rec)}">Open finding aid &#8594;</a>
+  </div>`;
+}
+
+function visible(){
+  const q = findEl.value.trim().toLowerCase();
+  let v = aids.filter(r => {
+    if (digiEl.checked && !r.digital) return false;
+    if (!q) return true;
+    return (r.title + " " + r.abstract + " " + r.creators.join(" ") + " " + r.subjects.join(" ")).toLowerCase().includes(q);
+  });
+  const s = sortEl.value;
+  v.sort((a,b)=>{
+    if (s === "title") return a.title.localeCompare(b.title);
+    if (s === "title-desc") return b.title.localeCompare(a.title);
+    if (s === "date-asc") return dateKey(a) - dateKey(b);
+    if (s === "date-desc") return dateKey(b) - dateKey(a);
+    return 0;
+  });
+  return v;
+}
+
+function render(){
+  const v = visible();
+  listEl.className = "aid-list";
+  if (v.length){
+    listEl.innerHTML = v.map(row).join("");
+  } else {
+    listEl.className = "";
+    listEl.innerHTML = done
+      ? `<div class="state"><h2>No finding aids match</h2><p>Try a different word or clear the filter.</p></div>`
+      : `<div class="state"><div class="spinner"></div>Loading finding aids&#8230;</div>`;
+  }
+  countEl.textContent = v.length === aids.length ? `${aids.length} finding aids` : `${v.length} of ${aids.length}`;
+}
+
+findEl.addEventListener("input", debounce(render, 120));
+sortEl.addEventListener("change", render);
+digiEl.addEventListener("change", render);
+
+(async () => {
+  if (!slug){
+    repoTitle.textContent = "No repository specified";
+    listEl.innerHTML = `<div class="state error"><h2>Missing repository</h2><p>Open this page from the <a href="index.html">repository directory</a>.</p></div>`;
+    return;
+  }
+
+  let name = slug;
+  try {
+    const { repositories } = await loadRepositories();
+    const found = repositories.find(r => r.slug === slug);
+    if (found) name = found.name;
+  } catch(_){}
+  crumbName.textContent = name;
+  repoTitle.textContent = name;
+  document.title = `${name} — TARO`;
+
+  listEl.innerHTML = `<div class="state"><div class="spinner"></div>Loading finding aids&#8230;</div>`;
+
+  try {
+    const res = await loadRepoAids(slug, {
+      repoName: name,
+      onProgress: (partial, total) => {
+        aids = partial;
+        if (partial.length) toolbar.hidden = false;
+        repoSub.textContent = total
+          ? `Loading… ${partial.length} of ${total}`
+          : `Loading… ${partial.length} so far`;
+        render();
+      }
+    });
+    aids = res.aids;
+    done = true;
+
+    if (!aids.length){
+      toolbar.hidden = true;
+      repoSub.textContent = "";
+      listEl.className = "";
+      listEl.innerHTML = `<div class="state"><h2>No finding aids found</h2>
+        <p>This repository has no published finding aids, or none could be retrieved.
+        You can browse it on <a href="https://txarchives.org/${esc(slug)}" rel="noopener">TARO</a>.</p></div>`;
+      return;
+    }
+    toolbar.hidden = false;
+    repoSub.textContent = `${aids.length} finding aid${aids.length === 1 ? "" : "s"}` +
+      (res.source === "cached" ? " · from saved snapshot" : "");
+    render();
+  } catch (e) {
+    done = true;
+    listEl.className = "";
+    listEl.innerHTML = `<div class="state error">
+      <h2>Couldn’t load this repository’s finding aids</h2>
+      <p>A live request to TARO didn’t succeed (${esc(String(e.message || e))}).</p>
+      <p style="margin-top:12px"><a href="https://txarchives.org/${esc(slug)}" rel="noopener">Browse ${esc(name)} on TARO →</a></p>
+    </div>`;
+  }
+})();
+</script>
+</body>
+</html>

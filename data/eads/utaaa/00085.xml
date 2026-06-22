@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns="urn:isbn:1-931666-22-9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:isbn:1-931666-22-9 ead.xsd" relatedencoding="MARC21">
+  <eadheader langencoding="ISO639-2" id="a0" audience="internal" findaidstatus="edited-full-draft">
+    <eadid countrycode="US" encodinganalog="852$a" mainagencycode="US-TxAuUAA">urn:taro:utexas.aaa.00085</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper> Weinreb Architectural collection</titleproper>
+      
+      </titlestmt>
+      <publicationstmt>
+        <publisher>The University of Texas at Austin. University of Texas Libraries. Alexander Architectural Archives.</publisher>
+        <date>2003</date>
+      </publicationstmt>
+    </filedesc>
+    <profiledesc>
+      <creation>Record created by Rebecca Romanchuk using XMetaL 3.0 on <date normal="20031031">October 31, 2003</date></creation>
+      <langusage>Finding aid written in <language>English.</language></langusage>
+    </profiledesc>
+    <revisiondesc>
+      <change>
+        <date era="ce" calendar="gregorian" normal="20231024">October 24, 2023</date>
+        <item>Edited with Oxygen 23.1 by Stephanie Tiedeken according to instructions in <title render="italic">TARO 2 EAD Editing Instructions</title>.</item>
+      </change>
+      <change>
+      <date era="ce" calendar="gregorian" normal="20250307">March 7, 2025</date>
+      <item>Edited with Oxygen 23.1 by Stephanie Tiedeken according to instructions in <title render="italic">TARO 2 EAD Editing Instructions</title>.</item>
+      </change>
+    </revisiondesc>
+  </eadheader>
+  <archdesc level="collection" type="inventory">
+    <did id="a1">
+      <head>Collection Summary</head>
+      <origination label="Creator" encodinganalog="110">
+        <corpname source="lc" encodinganalog="110">Weinreb, Ben, 1912-1999</corpname>
+      </origination>
+      <unittitle label="Title:" encodinganalog="245">Weinreb Architectural collection</unittitle>
+      <unitdate label="Dates:" encodinganalog="245$f" type="inclusive" normal="1825/1890" era="ce" calendar="gregorian">1825-1890</unitdate>
+      <unitdate label="Dates:" encodinganalog="245$f" type="inclusive" normal="1928/1932" era="ce" calendar="gregorian">1928-1932</unitdate>
+      <langmaterial label="Language:" encodinganalog="546$a">Materials are in <language langcode="eng">English</language>, <language langcode="swe">Swedish</language>, <language langcode="fre">French</language>, and <language langcode="ger">German</language>.</langmaterial>
+      <physdesc label="Quantity:" encodinganalog="300$a"><extent>14 sketchbooks</extent><extent>17 drawings</extent><extent>23 photographs</extent></physdesc>
+      <unitid countrycode="US" repositorycode="US-TxAuUAA" encodinganalog="099" label="Identification:">WEINR</unitid>
+      <repository label="Repository:" encodinganalog="852$a">
+        <extref xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+          xlink:show="new" xlink:actuate="onRequest"
+          xlink:href="https://www.lib.utexas.edu/about/locations/alexander-architectural-archives">
+          <corpname><subarea>Alexander Architectural Archives, </subarea> University of
+            Texas Libraries, The University of Texas at Austin.</corpname>
+        </extref>
+      </repository>
+      <abstract label="Abstract:" encodinganalog="520$a">Sketchbooks of drawings and plans, architectural drawings, lithographs and other reproductions of largely European architecture constitute the Weinreb Architectural collection, a group of materials that represents a small selection of the inventory of London antiquarian architectural bookseller Ben Weinreb (1912-1999). The sketchbooks especially document architects' visits to important examples of European architecture in the mid- to late-19th century to sketch and study their styles and forms.</abstract>
+    </did>
+    <bioghist id="a2" encodinganalog="545">
+      <head>Biographical Ben Weinreb</head>
+      <p>Ben Weinreb was born in Halifax, West Yorkshire on February 5, 1912 and worked in bookstores and the theater in his youth. He began to specialize in architectural books in the 1950s and opened his first regular shop across from the British Museum in 1960. He sold his entire stock to the University of Texas in 1968 but continued as a book and print dealer for a short time. He collaborated with Christopher Hibbert to compile <title xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" render="italic" xlink:href="">The London Encyclopedia</title> (1983), a reference book of that city's history and culture, and provided text to accompany  his son Matthew Weinreb's photographs for <title xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" render="italic" xlink:href="">London Architecture</title> (1993). Weinreb's sixty inventory catalogues are still used as important reference works to architectural publications. He died in Henton, Somerset on April 3, 1999.</p>
+    </bioghist>
+    <scopecontent id="a3" encodinganalog="520$b">
+      <head>Scope and Content of the collection</head>
+      <p>Sketchbooks of drawings and plans, architectural drawings, lithographs and other reproductions of largely European architecture constitute the Weinreb Architectural collection, a group of materials that represents a small selection of the inventory of London antiquarian architectural bookseller Ben Weinreb (1912-1999). The sketchbooks especially document architects' visits to important examples of European architecture in the mid- to late-19th century to sketch and study their styles and forms; four of these sketchbooks were executed by British architect Evelyn A. Hellicar. Other sketchbooks are of plans for residences, churches, and  a hotel of the same period. The majority of the unbound original architectural drawings are presentation drawings of designs by Oliver Hill, RIBA, executed by J.D.M. Harvey. Reproductions in the collection consist mainly of late-19th century lithographic views of port cities in Sweden, Italy, and France.</p>
+    </scopecontent>
+    <accessrestrict id="a14" encodinganalog="506">
+      <head>Policies Governing Use and Access</head>
+      <p>This collection is open for research. Researchers must register and agree to copyright and privacy laws before
+        using archival materials. As all or portions of this collection may be housed off-site, advance notice of at
+        least three working days is required for retrieval. Certain items may require additional time for flattening or
+        humidifying before they can be viewed. Access is by appointment only. Please contact the archives' reference
+        staff for further information.</p>
+      <p>Manuscript collections and archival records may contain materials with sensitive or confidential information
+        that is protected under federal or state right to privacy laws and regulations. Researchers are advised that the
+        disclosure of certain information pertaining to identifiable living individuals without the consent of those
+        individuals may have legal ramifications (e.g., a cause of action under common law for invasions of privacy may
+        arise if facts concerning an individual's private life are published that would be deemed highly offensive to a
+        reasonable person).</p>
+      <p>The Alexander Architectural Archives operate in accordance with applicable federal or state laws and
+        regulations, providing unrestricted access to university records not covered by state and federal right to
+        privacy acts.</p>
+      <p>The Alexander Architectural Archives, The University of Texas Libraries, and The University of Texas at Austin,
+        assume no responsibility for infringement of literary property rights and copyright or for liability to any
+        person for defamation or invasion of privacy that results from a researcher's use of collections.</p>
+      <p>Researchers agree to indemnify and hold harmless The University of Texas at Austin, and their officers,
+        employees, and agents from and against all suits, claims, actions, and expenses arising out of use of
+        collections held by the libraries. Please alert staff if anything inappropriate is found during research.</p>
+      <p>Copyright interests in this collection may not have been transferred to the University of Texas. Researchers
+        assume full responsibility for observing all copyright, property, and libel laws as they apply. Additionally,
+        the public use of material must be cited. See citation information below.</p>
+    </accessrestrict>
+    <prefercite id="a18" encodinganalog="524">
+      <head>Preferred Citation</head>
+      <p>Weinreb Architectural collection, Alexander Architectural Archives, University of Texas Libraries, The University of Texas at Austin</p>
+    </prefercite>
+    <acqinfo encodinganalog="541">
+      <head>Acquisition Information</head>
+      <p>Transferred to the Alexander Architectural Archives from the Harry Ransom Humanitites Research Center, 1990.</p>
+    </acqinfo>
+     
+    <processinfo  encodinganalog="583">
+      <head>Collection Processors</head>
+      <p>Drawings and other materials processed by: Rebecca Romanchuk, November 2003. Revisions by Donna Coates, April 2010.</p>
+    </processinfo>
+      <controlaccess id="a12">
+        <head>Index Terms</head>
+        
+        <controlaccess>
+          <head>Creator (persons)</head>
+          <persname source="lcnf" encodinganalog="600">Weinreb, Ben, 1912-1999</persname>
+        </controlaccess>
+        <controlaccess>
+          <head>Subjects (Persons)</head>
+          <persname encodinganalog="600" source="local">Adams, Maurice B.</persname>
+          <persname encodinganalog="600" source="local">Barry, Edward M.</persname>
+          <persname encodinganalog="600" source="local">Chatenay, Léon</persname>
+          <persname encodinganalog="600" source="local">Darbyshire, H.A.</persname>
+          <persname encodinganalog="600" source="local"> Hardy, E.J.F.</persname>
+          <persname source="lcnaf" encodinganalog="600">Harvey, J. D. M. (John Dean Monroe), b. 1895</persname>
+          <persname encodinganalog="600" source="avery">Hellicar, Evelyn Arthur, 1862-1929</persname>
+          <persname encodinganalog="600" source="lcnaf">Hill, Oliver</persname>
+          <persname encodinganalog="600" source="local">Kinder, Charles</persname>
+          <persname source="lcnaf" encodinganalog="600">Owen, F.D.</persname>
+          <persname encodinganalog="600" source="lcnaf">Rossi, Karl Ivanovich (1775-1849)</persname>
+        </controlaccess>
+        <controlaccess>
+          <head>Subjects</head>
+          <subject encodinganalog="650" source="lcsh">Architecture--England--19th century.</subject>
+          <subject source="lcsh" encodinganalog="650">Architecture--Italy--19th century.</subject>
+          <subject source="lcsh" encodinganalog="650">Architecture--France--19th century.</subject>
+          <subject source="lcsh" encodinganalog="650">Architecture--Holland--19th century.</subject>
+          <subject encodinganalog="650" source="lcsh">Architecture--Belgium--19th century.</subject>
+          <subject encodinganalog="650" source="lcsh">Architecture--Germany--19th century.</subject>
+          <subject encodinganalog="650" source="lcsh">Architecture--Sweden.</subject>
+        </controlaccess>
+        <controlaccess>
+          <head>Places</head>
+          <geogname source="lcnaf" encodinganalog="651">England</geogname>
+          <geogname source="lcnaf" encodinganalog="651">Italy</geogname>
+          <geogname source="lcnaf" encodinganalog="651">Sweden</geogname>
+          <geogname source="lcnaf" encodinganalog="651">France</geogname>
+          <geogname source="lcnaf" encodinganalog="651">Germany</geogname>
+        </controlaccess>
+        <controlaccess>
+          <head>Document types</head>
+          <genreform source="aat" encodinganalog="655">Architectural drawings</genreform>
+          <genreform source="aat" encodinganalog="655">Lithographs</genreform>
+          <genreform source="aat" encodinganalog="655">Sketchbooks</genreform>
+        </controlaccess>
+      <controlaccess>
+        <head>Places</head>
+        <geogname source="lcnaf" encodinganalog="651">England</geogname>
+        <geogname source="lcnaf" encodinganalog="651">Italy</geogname>
+        <geogname source="lcnaf" encodinganalog="651">Sweden</geogname>
+        <geogname source="lcnaf" encodinganalog="651">France</geogname>
+        <geogname source="lcnaf" encodinganalog="651">Germany</geogname>
+      </controlaccess>
+      <controlaccess>
+        <head>Document types</head>
+        <genreform source="aat" encodinganalog="655">Architectural drawings</genreform>
+        <genreform source="aat" encodinganalog="655">Lithographs</genreform>
+        <genreform source="aat" encodinganalog="655">Sketchbooks</genreform>
+      </controlaccess>
+    </controlaccess>
+
+    <relatedmaterial id="a6" encodinganalog="544 1">
+      <head>Related Material</head>
+      <p>Ben Weinreb Collection of Architectural Drawings, Harry Ransom Humanities Research Center, the University of Texas at Austin.</p>
+    </relatedmaterial>
+    <otherfindaid id="a8" encodinganalog="555">
+      <head>Other Finding Aids</head>
+      <p>Unpublished inventory in the Archive.</p>
+    </otherfindaid>
+    <bibliography encodinganalog="510">
+      <head>Selected references to works by  Ben Weinreb</head>
+      <bibref>B. Weinreb Architectural Books Ltd. <title>The Weinreb catalogues: an annotated index</title>. London: Paul Breman Ltd., 1969.</bibref>
+      <bibref>Collector's Institute. <title>Second annual meeting, November 22, 1969</title>. Austin, Tex., 1969. (includes address by Ben Weinreb)</bibref>
+      <bibref>Weinreb, Ben. <title>No. 4 Parton Street: the history of a left-wing bookshop</title>. London: Camden Historical Society, 1985.</bibref>
+      <bibref>Weinreb, Ben and Hibbert, Christopher, Eds. <title>  The London Encyclopedia</title>.  London: Macmillan, 1983.</bibref>
+      <bibref>Weinreb, Matthew, with commentary by Ben Weinreb. <title>London Architecture: features and facades</title>.  London: Phaidon Press, 1993.</bibref>
+    </bibliography>
+    <dsc type="combined" id="a23">
+      <head>Detailed Description of the Collection</head>
+      <p>The following section contains a detailed listing of the materials in the collection.</p>
+      <c01 level="series" id="ser1">
+        <did>
+          <unittitle>Series A: Sketchbooks, </unittitle>
+          <unitdate>1838-1932</unitdate>
+        </did>
+        <scopecontent>
+          <head>Series Abstract</head>
+          <p>This series consists of 11 sketchbooks or albums created by architects to compile their study drawings of architecture of various European countries, or as workbooks for their own designs.</p>
+        </scopecontent>
+        <c02 level="file">
+          <did>
+            <container type="box">1</container>
+            <unittitle>Sketchbook of measured house sketches and outdoor scenes in pencil,<unitdate>c.1932</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="subseries">
+          <did>
+            <container type="box">1</container>
+            <unittitle>Sketchbooks of buildings in Normandy, Belgium, Holland, and England</unittitle>
+            <unitdate>1883-1887</unitdate>
+            <abstract>Drawings by Evelyn A. Hellicar, RIBA, in pen, pencil and watercolor, many with measurements and notes.</abstract>
+            <note>
+              <p altrender="italic">Note: sketchbook cover label appears within brackets.</p>
+            </note>
+          </did>
+          <c03 level="file">
+            <did>
+              <container type="box">1</container>
+              <unittitle>31 drawings of buildings in Normandy [Normandy (2), Vol. 5], <unitdate>1883</unitdate></unittitle>
+            </did>
+          </c03>
+          <c03 level="file">
+            <did>
+              <container type="box">1</container>
+              <unittitle>23 drawings of buildings in England and Normandy [Normandy (3), Vol. 6],<unitdate>1883</unitdate></unittitle>
+            </did>
+          </c03>
+          <c03 level="file">
+            <did>
+              <container type="box">1</container>
+              <unittitle>23 drawings of buildings in Belgium [Belgium, Vol. 7],<unitdate>1884</unitdate></unittitle>
+            </did>
+          </c03>
+          <c03 level="file">
+            <did>
+              <container type="box">1</container>
+              <unittitle>17 drawings of buildings in Holland [Holland, Vol. 10],<unitdate>1887</unitdate></unittitle>
+            </did>
+          </c03>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">2</container>
+            <unittitle>Sketchbook of 193 drawings and engravings of views, buildings, and details in Holland, Switzerland, France, Belgium and the Rhineland by an unknown architect, in pen, pencil and colored wash, <unitdate>1838-1857</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">2</container>
+            <unittitle>Album of 181 sketches in pencil by Sir Edward M. Barry (1830-1880; architect of the present-day Covent Garden) of architectural details of churches and other buildings in England, Holland, France, Germany, and Italy, <unitdate>1848-1873</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">3</container>
+            <unittitle>Album and sketchbook by Maurice B. Adams (1849-1933) of 143 drawings of English houses and churches, in pen and pencil, <unitdate>c.1874-1889</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">4</container>
+            <unittitle>Sketchbook of 23 drawings by an unknown architect of architectural details in  ink wash, <unitdate>n.d.</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">4</container>
+            <unittitle>Album of sketches by E.J.F. Hardy of churches in France in ink, pencil, and watercolor,<unitdate>1844</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">5</container>
+            <unittitle>Album of   44 drawings of Italian architecture and details  attributed to H.A. Darbyshire ( -1899), in pen, pencil, and watercolor, <unitdate>1848</unitdate></unittitle>
+          </did>
+        </c02>
+      </c01>
+      <c01 id="ser2" level="series">
+        <did>
+          <unittitle>Series B: Drawings, </unittitle>
+          <unitdate>1825-1928</unitdate>
+        </did>
+        <scopecontent>
+          <head>Series Abstract</head>
+          <p>This series consists of original architectural drawings, including three albums of plans for residences, churches, and a hotel, dating from the mid- to late-19th century, and six presentation drawings of  early 20th century designs by Oliver Hill, RIBA, of residences in England, France, Ireland, and Rhodesia, three of which were drawn by J.D.M. Harvey. The remainder of drawings in this series are unidentified residential designs and details, and perspective studies, all dating from the 19th century.</p>
+        </scopecontent>
+        <c02 level="file">
+          <did>
+            <container type="box">4</container>
+            <unittitle>Album of 58 plans for residences in England by Clarke and Northcott, Builders, and others, in pen and watercolor, <unitdate>c.1844-1845</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">6</container>
+            <unittitle>Album of 51 designs for Italian churches and residences attributed to Karl Ivanovich Rossi (1775-1849) according to note in front of album, in pen and wash, <unitdate>18??</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <container type="box">7</container>
+            <unittitle>Album of 9 plans for "Hotel de Mr. Alleon", Léon Chatenay, architect, in ink and wash, <unitdate>1863</unitdate></unittitle>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            
+            <unittitle label="Project name:">Residence, Hurtwood Estate.</unittitle>
+            <unitdate label="Date on drawings:">1928</unitdate>
+            
+            <origination label="Primary archt/firm:">Oliver Hill (1887-1968)</origination>
+            
+            <note>
+              <p>Note: drawn by J.D.M. Harvey</p>
+            </note>
+          </did>
+          <controlaccess>
+            
+            <geogname role="County:">Surrey</geogname>
+            
+            <geogname role="Country:">England</geogname>
+          </controlaccess>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Shanes Castle, south front.</unittitle>
+            
+            <origination label="Primary archt/firm:">Oliver Hill (1887-1968)</origination>
+            
+            <note>
+              <p>Note: drawn by J.D.M. Harvey</p>
+            </note>
+          </did>
+          <controlaccess>
+            
+            <geogname role="County:">Antrim</geogname>
+          
+            <geogname role="Country:">Ireland</geogname>
+          </controlaccess>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Residence, front and back exterior views, inner courtyard view.</unittitle>
+           
+            <origination label="Primary archt/firm:">Oliver Hill (1887-1968)</origination>
+            
+          </did>
+          <controlaccess>
+            <persname role="Client:">De Forrest, Baron</persname>
+            
+            <geogname role="City:">Biarritz</geogname>
+           
+            <geogname role="Country:">France</geogname>
+          </controlaccess>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Rhodesian ranch house, charter estate for Lords Salisbury, De La Warr, and Hudson.</unittitle>
+           
+            <origination label="Primary archt/firm:">Oliver Hill (1887-1968)</origination>
+           
+            <note>
+              <p>Note: drawn by J.D.M. Harvey</p>
+            </note>
+          </did>
+          <controlaccess>
+            <persname>De La Warr, Lord</persname>
+            <persname>Hudson, Lord</persname>
+            <persname>Salisbury, Lord</persname>
+            
+            <geogname role="Country:">Rhodesia</geogname>
+          </controlaccess>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Building with privy; cistern house; window details.</unittitle>
+            <unitdate label="Date on drawings:">1856</unitdate>
+            
+          </did>
+        
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Perpective studies, ink and wash.</unittitle>
+            <unitdate label="Date on drawings:">1825-1827</unitdate>
+           
+            <origination label="Primary archt/firm:">Charles Kinder</origination>
+           
+          </did>
+          
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Interior entrance and staircase, ink and wash.</unittitle>
+            <unitdate label="Date on drawings:">18??</unitdate>
+           
+          </did>
+        
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Unidentified drawing room interior, pencil sketch.</unittitle>
+           
+          </did>
+         
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Unidentified fireplace mantel design, pencil sketch.</unittitle>
+          </did>
+        </c02>
+      </c01>
+      <c01 level="series">
+        <did>
+          <unittitle>Series C: Lithographs and other reproductions, </unittitle>
+          <unitdate>1852-c.1900</unitdate>
+        </did>
+        <scopecontent>
+          <head>Series Abstract</head>
+          <p>The bulk of this series consists of late-19th century lithographic views of port cities in Sweden, Italy, and France. Also present are drawings reproduced in late-19th century periodicals of Torpa Slott (Torpa Palace) in Sweden and of the White House in Washington, D.C. A lithograph of an example of Flemish architecture and a photograph of the construction or renovation of a  commercial building in an unidentified U.S. city complete this series.</p>
+        </scopecontent>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Lithographic views of port cities in Sweden, Italy, and France</unittitle>
+            <unitdate label="Date on drawings:">c.1879</unitdate>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Lithograph of an example of Flemish architecture</unittitle>
+            <unitdate label="Date on drawings:">1852</unitdate>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Photograph of five story building in U.S. city block, under construction or renovation</unittitle>
+            <unitdate label="Date on drawings:">c.1900</unitdate>
+          </did>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">Torpa Slott (Torpa Palace).</unittitle>
+           
+          </did>
+          <controlaccess>
+            <geogname role="City:">Torpa</geogname>
+            <geogname role="County:">Vestergötland</geogname>
+            <geogname role="Country:">Sweden</geogname>
+          </controlaccess>
+        </c02>
+        <c02 level="file">
+          <did>
+            <unittitle label="Project name:">White House (U.S. Executive Mansion), views and plans from Architecture and Building, vol. XIII, no.23, December 6, 1890.</unittitle>
+            <unitdate label="Date on drawings:">1890</unitdate>
+            <origination label="Primary archt/firm:">F.D. Owen</origination>
+          </did>
+          <controlaccess>
+            <geogname role="Street address:">1600 Pennsylvania Ave.</geogname>
+            <geogname role="City:">Washington, D.C.</geogname>
+            <geogname role="Country:">U.S.</geogname>
+          </controlaccess>
+        </c02>
+      </c01>
+    </dsc>
+  </archdesc>
+</ead>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#15212A" />
+<title>Search — TARO Finding Aids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/taro.css" />
+</head>
+<body>
+<header class="masthead" data-masthead></header>
+
+<main class="wrap page">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="index.html">Repositories</a><span class="sep">/</span><span>Search</span>
+  </nav>
+
+  <div class="pagehead">
+    <h1>Search all finding aids</h1>
+    <p class="lede">Full-text search across every finding aid on TARO, live from the Search API.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="find">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Search words, names, places…" aria-label="Search all finding aids" autocomplete="off" />
+    </div>
+    <span class="ctrl-count" id="count"></span>
+  </div>
+
+  <div id="results" aria-live="polite"></div>
+</main>
+
+<footer class="site-foot" data-footer></footer>
+
+<script type="module">
+import { liveSearch, aidHref, formatDates, esc, mountMasthead, mountFooter } from "./assets/site.js";
+
+mountMasthead();
+mountFooter();
+
+const qEl = document.getElementById("q");
+const results = document.getElementById("results");
+const count = document.getElementById("count");
+
+function row(rec){
+  const dates = formatDates(rec);
+  return `<div class="aid-row">
+    <div>
+      <h2 class="atitle"><a href="${aidHref(rec)}">${esc(rec.title)}</a></h2>
+      ${rec.abstract ? `<p class="aabs">${esc(rec.abstract)}</p>` : ""}
+      <div class="ameta">
+        ${rec.repositoryName ? `<span class="pill">${esc(rec.repositoryName)}</span>` : ""}
+        ${dates ? `<span class="dates">${esc(dates)}</span>` : ""}
+        ${rec.digital ? `<span class="pill digi">Digitized</span>` : ""}
+      </div>
+    </div>
+    <a class="go" href="${aidHref(rec)}">Open →</a>
+  </div>`;
+}
+
+async function run(q){
+  if (!q){ results.innerHTML = ""; count.textContent = ""; return; }
+  results.className = "";
+  results.innerHTML = `<div class="state"><div class="spinner"></div>Searching…</div>`;
+  count.textContent = "";
+  try {
+    const rows = await liveSearch(q);
+    if (!rows.length){
+      results.innerHTML = `<div class="state"><h2>No matches for “${esc(q)}”</h2><p>Try fewer or different words.</p></div>`;
+      return;
+    }
+    results.className = "aid-list";
+    results.innerHTML = rows.map(row).join("");
+    count.textContent = `${rows.length} result${rows.length===1?"":"s"}`;
+  } catch (e) {
+    results.className = "";
+    results.innerHTML = `<div class="state error">
+      <h2>Couldn’t reach the search API from your browser</h2>
+      <p>Live search needs a cross-origin request to TARO, which may be blocked here.
+      You can search directly on <a href="https://txarchives.org/search?q=${encodeURIComponent(q)}" rel="noopener">TARO</a>.</p>
+    </div>`;
+  }
+}
+
+let t;
+qEl.addEventListener("input", () => {
+  clearTimeout(t);
+  const q = qEl.value.trim();
+  history.replaceState(null, "", q ? `?q=${encodeURIComponent(q)}` : location.pathname);
+  t = setTimeout(() => run(q), 320);
+});
+
+const initial = new URLSearchParams(location.search).get("q") || "";
+qEl.value = initial;
+run(initial.trim());
+qEl.focus();
+</script>
+</body>
+</html>
