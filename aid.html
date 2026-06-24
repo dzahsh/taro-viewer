@@ -13,13 +13,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
   :root{
-    --paper:#F0EDE5; --paper-2:#E7E3D8; --panel:#F7F5EF; --panel-2:#FBFAF6;
-    --ink:#1E1D18; --ink-2:#56524A; --ink-3:#8A8475;
-    --rule:#D8D2C4; --rule-soft:#E6E1D5;
-    --chrome:#15212A; --chrome-2:#1E2F3A; --chrome-line:rgba(255,255,255,.10);
-    --paper-on-chrome:#E9E5DB; --dim-on-chrome:#9DAAB2;
-    --accent:#1C5070; --accent-2:#143C56; --accent-bright:#82B2CF;
-    --mark:#F3DA9F; --mark-line:#A9731F;
+    /* TARO palette: white content, steel-blue chrome, blue links */
+    --paper:#FBFCFD; --paper-2:#EDF1F6; --panel:#F3F6FA; --panel-2:#FAFCFE;
+    --ink:#20272E; --ink-2:#4C5763; --ink-3:#7A8694;
+    --rule:#DCE3EA; --rule-soft:#E9EEF3;
+    --chrome:#41618A; --chrome-2:#35527A; --chrome-line:rgba(255,255,255,.14);
+    --paper-on-chrome:#FFFFFF; --dim-on-chrome:#C5D2E2;
+    --accent:#2C5FA3; --accent-2:#1E4880; --accent-bright:#8FB4DC;
+    --mark:#FCE9A6; --mark-line:#D9B25E;
+    --taro-teal:#1C8C9E;
     --sans:'Archivo',system-ui,sans-serif;
     --serif:'Source Serif 4',Georgia,serif;
     --mono:'Space Mono',ui-monospace,monospace;
@@ -289,12 +291,41 @@
   .aid-sitebar .sb-crumbs span{color:#3a4f5e}
   .aid-sitebar .sb-taro{margin-left:auto; white-space:nowrap}
   @media (max-width:720px){ .aid-sitebar .sb-crumbs{display:none} }
+  /* ===================== TARO look-and-feel overrides ===================== */
+  /* top accent strip + white brand bar with the real TARO logo */
+  .aid-sitebar{ background:#fff; border-top:3px solid var(--taro-teal); border-bottom:1px solid var(--rule); color:var(--ink-2); }
+  .aid-sitebar .sb-in{ padding:10px 28px; }
+  .aid-sitebar a{ color:var(--accent); }
+  .aid-sitebar a:hover{ color:var(--accent-2); }
+  .aid-sitebar .sb-mark{ display:none; }
+  .aid-sitebar .sb-brand{ color:var(--ink); }
+  .aid-sitebar .brand-logo{ height:34px; width:auto; display:block; }
+  .aid-sitebar .sb-crumbs span{ color:var(--ink-3); }
+
+  /* slate section-header bars (like TARO's "Collection Summary") */
+  .doc section.section{ border-top:none; padding:18px 0 24px; }
+  .doc section.section > .eyebrow{ display:none; }
+  .doc section.section > h2{ background:var(--chrome); color:#fff; font-family:var(--sans); font-weight:700;
+    font-size:1.12rem; letter-spacing:0; padding:9px 16px; border-radius:6px; margin:0 0 18px; }
+  .doc section.section.hit::before{ display:none; }
+
+  /* left sidebar panels (like TARO's "View Other Versions / Table of Contents") */
+  .rail-group{ background:#fff; border:1px solid var(--rule); border-radius:7px; margin-bottom:14px; overflow:hidden; }
+  .rail-group + .rail-group{ border-top:1px solid var(--rule); padding-top:0; }
+  .rail-eyebrow{ background:var(--chrome); color:#fff; margin:0; padding:9px 12px; }
+  .rail-head-row{ background:var(--chrome); padding:5px 12px; align-items:center; }
+  .rail-head-row .rail-eyebrow{ background:none; padding:0; }
+  .rail-actions button{ color:#fff; }
+  .rail-actions button:hover{ color:#fff; background:rgba(255,255,255,.16); }
+  .rail-group > .navlink:first-of-type{ margin-top:6px; }
+  .rail-group > .navlink:last-of-type{ margin-bottom:6px; }
+  .tree{ padding:6px 10px 10px; }
 </style>
 </head>
 <body>
 <div class="aid-sitebar">
   <div class="sb-in">
-    <a class="sb-brand" href="index.html"><span class="sb-mark" aria-hidden="true"></span>TARO</a>
+    <a class="sb-brand" href="index.html" aria-label="TARO home"><img class="brand-logo" src="https://txarchives.org/static/media/taro_logo.971efd0fb301ed63347b.png" alt="TARO — Texas Archival Resources Online" /></a>
     <nav class="sb-crumbs" aria-label="Breadcrumb">
       <a href="index.html">Repositories</a><span aria-hidden="true">/</span><a id="sb-repo" href="index.html">Repository</a>
     </nav>
@@ -587,9 +618,8 @@ window.__BOOT__ = function(eadText){
     </div>`;
   }
   function renderSeries(node){
-    const boxes = formatBoxes([...collectBoxes(node,new Set())]);
     const leaves = countLeaves(node);
-    const tag = [boxes, `${leaves} item${leaves===1?'':'s'}`].filter(Boolean).join(' · ');
+    const tag = `${leaves} item${leaves===1?'':'s'}`;
     const datesStr = node.dates.map(d=>d.text).join(', ');
     const abstract = node.children.length ? '' : '';
     // series-level scope note lives as a child <scopecontent> in EAD; pull from raw via stored note? we approximate with notes/abstract
@@ -648,7 +678,7 @@ window.__BOOT__ = function(eadText){
 
   function railNode(node){
     const hasKids = node.children.length>0;
-    const boxes = node.level==='series' ? formatBoxes([...collectBoxes(node,new Set())])
+    const boxes = node.level==='series' ? ''
                 : (node.containers.find(c=>c.type==='box') ? 'b'+node.containers.find(c=>c.type==='box').text : '');
     const chip = boxes ? `<span class="boxchip">${esc(boxes.replace('Boxes','Bx').replace('Box','Bx'))}</span>` : '';
     const title = (node.titleHtml||'Component').replace(/<[^>]+>/g,'');

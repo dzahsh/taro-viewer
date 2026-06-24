@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#15212A" />
-<title>TARO Finding Aids — Repositories</title>
-<meta name="description" content="Browse archival repositories and finding aids published on Texas Archival Resources Online (TARO)." />
+<meta name="theme-color" content="#41618A" />
+<title>TARO Finding Aids — Browse Texas Archives</title>
+<meta name="description" content="Search and browse archival finding aids from repositories across Texas, via Texas Archival Resources Online (TARO)." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -15,15 +15,21 @@
 <header class="masthead" data-masthead></header>
 
 <main class="wrap page">
-  <div class="pagehead">
-    <h1>Browse Texas archives</h1>
-    <p class="lede">Finding aids from archives, libraries, and museums across Texas. Choose a repository to see its collections, or search every finding aid at once.</p>
-  </div>
+  <section class="hero">
+    <h1>Search Texas archives</h1>
+    <p>Full-text search across every finding aid published on Texas Archival Resources Online.</p>
+    <form class="hero-search" role="search" id="heroForm">
+      <input id="heroQ" type="search" placeholder="Search names, places, subjects, collections&#8230;" aria-label="Search all finding aids" autocomplete="off" />
+      <button type="submit">Search</button>
+    </form>
+    <p class="hint"><a href="search.html">Advanced search</a></p>
+  </section>
 
+  <h2 class="section-label">Browse by repository</h2>
   <div class="toolbar">
     <div class="find">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input id="filter" type="search" placeholder="Filter repositories by name…" aria-label="Filter repositories by name" autocomplete="off" />
+      <input id="filter" type="search" placeholder="Filter repositories by name&#8230;" aria-label="Filter repositories by name" autocomplete="off" />
     </div>
     <span class="ctrl-count" id="repoCount"></span>
   </div>
@@ -40,6 +46,13 @@ import { loadRepositories, repoHref, esc, debounce, mountMasthead, mountFooter }
 mountMasthead();
 mountFooter();
 
+// hero search -> global search page
+document.getElementById("heroForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = document.getElementById("heroQ").value.trim();
+  if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
+});
+
 const grid = document.getElementById("grid");
 const empty = document.getElementById("empty");
 const countEl = document.getElementById("repoCount");
@@ -47,28 +60,28 @@ const filter = document.getElementById("filter");
 let repos = [];
 
 function card(r){
+  const meta = Number.isFinite(r.count)
+    ? `<span class="rcount">${r.count.toLocaleString()} finding aid${r.count===1?"":"s"}</span><span class="slug">${esc(r.slug)}</span>`
+    : `<span class="slug">${esc(r.slug)}</span>`;
   return `<a class="repo-card" href="${repoHref(r.slug)}">
     <div class="rname">${esc(r.name)}</div>
-    <div class="rmeta"><span class="slug">${esc(r.slug)}</span><span class="arrow" aria-hidden="true">View collections →</span></div>
+    <div class="rmeta">${meta}<span class="arrow" aria-hidden="true">&#8594;</span></div>
   </a>`;
 }
 
 function render(list){
   grid.innerHTML = list.map(card).join("");
   empty.hidden = list.length > 0;
-  countEl.textContent = list.length === repos.length
-    ? `${repos.length} repositories`
-    : `${list.length} of ${repos.length}`;
+  countEl.textContent = list.length === repos.length ? `${repos.length} repositories` : `${list.length} of ${repos.length}`;
 }
 
-const applyFilter = debounce(() => {
+filter.addEventListener("input", debounce(() => {
   const q = filter.value.trim().toLowerCase();
   render(q ? repos.filter(r => r.name.toLowerCase().includes(q) || r.slug.toLowerCase().includes(q)) : repos);
-}, 120);
-filter.addEventListener("input", applyFilter);
+}, 120));
 
 (async () => {
-  grid.innerHTML = `<div class="state"><div class="spinner"></div>Loading repositories…</div>`;
+  grid.innerHTML = `<div class="state"><div class="spinner"></div>Loading repositories&#8230;</div>`;
   try {
     const { repositories } = await loadRepositories();
     repos = repositories;
@@ -76,8 +89,7 @@ filter.addEventListener("input", applyFilter);
   } catch (e) {
     grid.innerHTML = "";
     empty.hidden = true;
-    grid.insertAdjacentHTML("beforeend",
-      `<div class="state error"><h2>Couldn’t load the repository list</h2><p>${esc(String(e.message||e))}</p></div>`);
+    grid.insertAdjacentHTML("beforeend", `<div class="state error"><h2>Couldn’t load the repository list</h2><p>${esc(String(e.message||e))}</p></div>`);
   }
 })();
 </script>

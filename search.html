@@ -37,7 +37,7 @@
 <footer class="site-foot" data-footer></footer>
 
 <script type="module">
-import { liveSearch, aidHref, formatDates, esc, mountMasthead, mountFooter } from "./assets/site.js";
+import { liveSearch, aidHref, lastDate, lastExtent, esc, mountMasthead, mountFooter } from "./assets/site.js";
 
 mountMasthead();
 mountFooter();
@@ -47,18 +47,18 @@ const results = document.getElementById("results");
 const count = document.getElementById("count");
 
 function row(rec){
-  const dates = formatDates(rec);
+  const dates = lastDate(rec);
+  const ext = lastExtent(rec);
   return `<div class="aid-row">
-    <div>
-      <h2 class="atitle"><a href="${aidHref(rec)}">${esc(rec.title)}</a></h2>
-      ${rec.abstract ? `<p class="aabs">${esc(rec.abstract)}</p>` : ""}
-      <div class="ameta">
-        ${rec.repositoryName ? `<span class="pill">${esc(rec.repositoryName)}</span>` : ""}
-        ${dates ? `<span class="dates">${esc(dates)}</span>` : ""}
-        ${rec.digital ? `<span class="pill digi">Digitized</span>` : ""}
-      </div>
+    <h2 class="atitle"><a href="${aidHref(rec)}">${esc(rec.title)}</a></h2>
+    ${rec.abstract ? `<p class="aabs">${esc(rec.abstract)}</p>` : ""}
+    <div class="ameta">
+      ${rec.repositoryName ? `<span class="pill repo">${esc(rec.repositoryName)}</span>` : ""}
+      ${dates ? `<span class="dates">${esc(dates)}</span>` : ""}
+      ${ext ? `<span class="pill">${esc(ext)}</span>` : ""}
+      ${rec.digital ? `<span class="pill digi">Digitized</span>` : ""}
     </div>
-    <a class="go" href="${aidHref(rec)}">Open →</a>
+    <a class="open" href="${aidHref(rec)}">Open finding aid &#8594;</a>
   </div>`;
 }
 

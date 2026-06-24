@@ -20,6 +20,7 @@ export const CONFIG = {
   SEARCH_API: "https://www.txarchives.org/api/finding_aid/search/",
   ADMIN_BASE: "https://www.txarchives.org/admin",
   DISPLAY_BASE: "https://txarchives.org",
+  LOGO: "https://txarchives.org/static/media/taro_logo.971efd0fb301ed63347b.png",
 };
 
 const OAI_NS = "http://www.openarchives.org/OAI/2.0/";
@@ -176,6 +177,19 @@ export async function liveSearch(text) {
   return (Array.isArray(rows) ? rows : []).map(normalizeAid);
 }
 
+/** Full-text search across the *content* of one repository's finding aids. */
+export async function liveSearchInRepo(slug, text) {
+  const url = `${CONFIG.SEARCH_API}?repository=${encodeURIComponent(slug)}&text=${encodeURIComponent(text)}`;
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`search failed (${res.status})`);
+  const rows = await res.json();
+  const want = slug.toLowerCase();
+  return (Array.isArray(rows) ? rows : [])
+    .filter((r) => r.repository && r.repository.toLowerCase() === want)
+    .map(normalizeAid)
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
 /* ----------------------------- normalization ---------------------------- */
 
 export function normalizeAid(r) {
@@ -215,6 +229,21 @@ export function formatDates(rec) {
   return s || e || "";
 }
 
+/** The LAST date in the record's list (used in finding-aid lists). */
+export function lastDate(rec) {
+  const d = rec.inclusiveDates;
+  if (d && d.length) return String(d[d.length - 1]).replace(/(\d{4})\s*-\s*(\d{4})/g, "$1\u2013$2");
+  const e = rec.endDates.filter((x) => x && x !== "0");
+  const s = rec.startDates.filter((x) => x && x !== "0");
+  if (s.length && e.length) return `${s[s.length - 1]}\u2013${e[e.length - 1]}`;
+  return e[e.length - 1] || s[s.length - 1] || "";
+}
+
+/** The LAST extent in the record's list. */
+export function lastExtent(rec) {
+  return rec.extents.length ? rec.extents[rec.extents.length - 1] : "";
+}
+
 /* ----------------------------- URL builders ----------------------------- */
 
 export function repoHref(slug) { return `repository.html?repo=${encodeURIComponent(slug)}`; }
@@ -240,16 +269,21 @@ export function mountMasthead() {
   const host = document.querySelector("[data-masthead]");
   if (!host) return;
   host.innerHTML = `
-    <div class="bar">
-      <a class="brand" href="index.html" aria-label="TARO finding aids — home">
-        <span class="mark" aria-hidden="true"></span>
-        <span class="wordmark"><b>TARO</b><span>Texas Archival Resources Online</span></span>
+    <div class="mast-top">
+      <a class="mast-brand" href="index.html" aria-label="TARO — home">
+        <img class="mast-logo" src="${CONFIG.LOGO}" alt="TARO — Texas Archival Resources Online" />
       </a>
       <span class="spacer"></span>
-      <form class="top-search" role="search" data-global-search>
+      <form class="mast-search" role="search" data-global-search>
         <input type="search" name="q" placeholder="Search all finding aids\u2026" aria-label="Search all finding aids" />
+        <button type="submit">Search</button>
       </form>
-    </div>`;
+    </div>
+    <nav class="mast-nav"><div class="mast-nav-in">
+      <a href="index.html">Repositories</a>
+      <a href="search.html">Search</a>
+      <a href="https://txarchives.org" target="_blank" rel="noopener">TARO &#8599;</a>
+    </div></nav>`;
   const form = host.querySelector("[data-global-search]");
   form.addEventListener("submit", (e) => {
     e.preventDefault();

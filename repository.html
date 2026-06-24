@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#15212A" />
+<meta name="theme-color" content="#41618A" />
 <title>Finding Aids — TARO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,7 +26,7 @@
   <div class="toolbar" id="toolbar" hidden>
     <div class="find">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input id="find" type="search" placeholder="Filter within this repository&#8230;" aria-label="Filter finding aids" autocomplete="off" />
+      <input id="find" type="search" placeholder="Search the full text of this repository&#8217;s finding aids&#8230;" aria-label="Search this repository" autocomplete="off" />
     </div>
     <label>Sort
       <select id="sort">
@@ -47,7 +47,7 @@
 
 <script type="module">
 import {
-  loadRepositories, loadRepoAids, aidHref, formatDates,
+  loadRepositories, loadRepoAids, liveSearchInRepo, aidHref, lastDate, lastExtent,
   esc, debounce, mountMasthead, mountFooter
 } from "./assets/site.js";
 
@@ -66,37 +66,32 @@ const sortEl = document.getElementById("sort");
 const digiEl = document.getElementById("digiOnly");
 const countEl = document.getElementById("listCount");
 
-let aids = [];
-let done = false;
+let name = slug;
+let allAids = [];     // full browse list (one Search API call)
+let view = [];        // currently displayed set (browse list or search results)
+let mode = "browse";  // "browse" | "search"
 
-function dateKey(rec){ const m = (formatDates(rec).match(/\d{4}/) || [])[0]; return m ? parseInt(m,10) : 0; }
+function dateKey(rec){ const m = (lastDate(rec).match(/\d{4}/) || [])[0]; return m ? parseInt(m,10) : 0; }
 
 function row(rec){
-  const dates = formatDates(rec);
+  const dates = lastDate(rec);
   const creator = rec.creators[0] || "";
-  const ext = rec.extents[0] || "";
+  const ext = lastExtent(rec);
   return `<div class="aid-row">
-    <div>
-      <h2 class="atitle"><a href="${aidHref(rec)}">${esc(rec.title)}</a></h2>
-      ${rec.abstract ? `<p class="aabs">${esc(rec.abstract)}</p>` : ""}
-      <div class="ameta">
-        ${dates ? `<span class="dates">${esc(dates)}</span>` : ""}
-        ${creator ? `<span class="pill">${esc(creator)}</span>` : ""}
-        ${ext ? `<span class="pill">${esc(ext)}</span>` : ""}
-        ${rec.digital ? `<span class="pill digi">Digitized</span>` : ""}
-      </div>
+    <h2 class="atitle"><a href="${aidHref(rec)}">${esc(rec.title)}</a></h2>
+    ${rec.abstract ? `<p class="aabs">${esc(rec.abstract)}</p>` : ""}
+    <div class="ameta">
+      ${dates ? `<span class="dates">${esc(dates)}</span>` : ""}
+      ${creator ? `<span class="pill">${esc(creator)}</span>` : ""}
+      ${ext ? `<span class="pill">${esc(ext)}</span>` : ""}
+      ${rec.digital ? `<span class="pill digi">Digitized</span>` : ""}
     </div>
-    <a class="go" href="${aidHref(rec)}">Open finding aid &#8594;</a>
+    <a class="open" href="${aidHref(rec)}">Open finding aid &#8594;</a>
   </div>`;
 }
 
-function visible(){
-  const q = findEl.value.trim().toLowerCase();
-  let v = aids.filter(r => {
-    if (digiEl.checked && !r.digital) return false;
-    if (!q) return true;
-    return (r.title + " " + r.abstract + " " + r.creators.join(" ") + " " + r.subjects.join(" ")).toLowerCase().includes(q);
-  });
+function applyControls(arr){
+  let v = digiEl.checked ? arr.filter(r => r.digital) : arr.slice();
   const s = sortEl.value;
   v.sort((a,b)=>{
     if (s === "title") return a.title.localeCompare(b.title);
@@ -109,20 +104,34 @@ function visible(){
 }
 
 function render(){
-  const v = visible();
+  const v = applyControls(view);
   listEl.className = "aid-list";
-  if (v.length){
-    listEl.innerHTML = v.map(row).join("");
-  } else {
-    listEl.className = "";
-    listEl.innerHTML = done
-      ? `<div class="state"><h2>No finding aids match</h2><p>Try a different word or clear the filter.</p></div>`
-      : `<div class="state"><div class="spinner"></div>Loading finding aids&#8230;</div>`;
-  }
-  countEl.textContent = v.length === aids.length ? `${aids.length} finding aids` : `${v.length} of ${aids.length}`;
+  listEl.innerHTML = v.length
+    ? v.map(row).join("")
+    : `<div class="state"><h2>${mode==="search" ? "No matches" : "No finding aids"}</h2><p>Try a different word${mode==="search" ? "" : " or clear the filters"}.</p></div>`;
+  const total = view.length;
+  countEl.textContent = v.length === total ? `${total} ${mode==="search"?"result"+(total===1?"":"s"):"finding aids"}` : `${v.length} of ${total}`;
 }
 
-findEl.addEventListener("input", debounce(render, 120));
+const runSearch = debounce(async () => {
+  const q = findEl.value.trim();
+  if (!q){ mode = "browse"; view = allAids; repoSub.textContent = subFor(allAids.length, "browse"); render(); return; }
+  mode = "search";
+  listEl.className = "";
+  listEl.innerHTML = `<div class="state"><div class="spinner"></div>Searching ${esc(name)}&#8230;</div>`;
+  try {
+    view = await liveSearchInRepo(slug, q);
+    repoSub.textContent = `${view.length} result${view.length===1?"":"s"} for &#8220;${esc(q)}&#8221;`.replace(/&[^;]+;/g, m=>({"&#8220;":"\u201c","&#8221;":"\u201d"}[m]||m));
+    render();
+  } catch (e) {
+    listEl.className = "";
+    listEl.innerHTML = `<div class="state error"><h2>Search didn’t complete</h2><p>${esc(String(e.message||e))}</p></div>`;
+  }
+}, 320);
+
+function subFor(n, m){ return `${n} finding aid${n===1?"":"s"}`; }
+
+findEl.addEventListener("input", runSearch);
 sortEl.addEventListener("change", render);
 digiEl.addEventListener("change", render);
 
@@ -132,8 +141,6 @@ digiEl.addEventListener("change", render);
     listEl.innerHTML = `<div class="state error"><h2>Missing repository</h2><p>Open this page from the <a href="index.html">repository directory</a>.</p></div>`;
     return;
   }
-
-  let name = slug;
   try {
     const { repositories } = await loadRepositories();
     const found = repositories.find(r => r.slug === slug);
@@ -144,37 +151,20 @@ digiEl.addEventListener("change", render);
   document.title = `${name} — TARO`;
 
   listEl.innerHTML = `<div class="state"><div class="spinner"></div>Loading finding aids&#8230;</div>`;
-
   try {
-    const res = await loadRepoAids(slug, {
-      repoName: name,
-      onProgress: (partial, total) => {
-        aids = partial;
-        if (partial.length) toolbar.hidden = false;
-        repoSub.textContent = total
-          ? `Loading… ${partial.length} of ${total}`
-          : `Loading… ${partial.length} so far`;
-        render();
-      }
-    });
-    aids = res.aids;
-    done = true;
-
-    if (!aids.length){
-      toolbar.hidden = true;
+    const res = await loadRepoAids(slug, { repoName: name });
+    allAids = res.aids;
+    view = allAids;
+    if (!allAids.length){
       repoSub.textContent = "";
       listEl.className = "";
-      listEl.innerHTML = `<div class="state"><h2>No finding aids found</h2>
-        <p>This repository has no published finding aids, or none could be retrieved.
-        You can browse it on <a href="https://txarchives.org/${esc(slug)}" rel="noopener">TARO</a>.</p></div>`;
+      listEl.innerHTML = `<div class="state"><h2>No finding aids found</h2><p>This repository has no published finding aids, or none could be retrieved. You can browse it on <a href="https://txarchives.org/${esc(slug)}" rel="noopener">TARO</a>.</p></div>`;
       return;
     }
     toolbar.hidden = false;
-    repoSub.textContent = `${aids.length} finding aid${aids.length === 1 ? "" : "s"}` +
-      (res.source === "cached" ? " · from saved snapshot" : "");
+    repoSub.textContent = subFor(allAids.length, "browse") + (res.source === "cached" ? " · from saved snapshot" : "");
     render();
   } catch (e) {
-    done = true;
     listEl.className = "";
     listEl.innerHTML = `<div class="state error">
       <h2>Couldn’t load this repository’s finding aids</h2>

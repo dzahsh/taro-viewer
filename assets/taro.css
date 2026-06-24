@@ -1,210 +1,145 @@
 /* ============================================================
    TARO finding-aid viewer — shared styles
-   Identity: architectural drafting register / ink-and-ledger.
-   Used by index.html (directory) and repository.html (aid list).
-   aid.html carries its own viewer styles but reuses these tokens.
+   Palette and chrome mirror the current TARO site (steel-blue
+   masthead/section bars, blue links, white content) so this reads
+   as an improvement to TARO's existing design.
+   Used by index.html, repository.html, search.html.
+   aid.html keeps its own copy of these tokens.
    ============================================================ */
 
 :root{
-  /* ground + chrome */
-  --paper:#F0EDE5;        /* warm drafting paper */
-  --paper-2:#E7E3D8;      /* slightly deeper panel */
-  --paper-3:#FBFAF6;      /* card face */
-  --chrome:#15212A;       /* deep ink-navy masthead/footer */
-  --chrome-2:#1B2C38;
+  --taro-blue:#41618A;       /* steel blue: nav, bars, buttons */
+  --taro-blue-dark:#35527A;
+  --taro-teal:#1C8C9E;       /* top accent strip */
+  --link:#2C5FA3;            /* body links */
+  --link-2:#1E4880;
 
-  /* ink scale */
-  --ink:#1C2024;
-  --ink-2:#3C434A;
-  --ink-3:#6A7178;
-  --ink-on-dark:#EAF0F2;
-  --ink-on-dark-2:#9DB1BD;
-
-  /* accent: prussian / architectural blue */
-  --accent:#1C5070;
-  --accent-2:#16435E;
-  --accent-bright:#82B2CF; /* for use on dark */
-  --mark:#F3DA9F;          /* search highlight */
+  --page:#F5F7FA;            /* app background */
+  --paper:#FFFFFF;           /* cards / content */
+  --panel:#F3F6FA;
+  --ink:#20272E;
+  --ink-2:#4C5763;
+  --ink-3:#7A8694;
+  --rule:#DCE3EA;
+  --rule-soft:#E9EEF3;
+  --mark:#FCE9A6;
   --mark-line:#D9B25E;
 
-  /* lines */
-  --rule:#CFC9BB;
-  --rule-soft:#E0DBCE;
-
-  /* type */
   --sans:"Archivo","Helvetica Neue",Arial,sans-serif;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 
   --maxw:1180px;
-  --r:10px;
-  --mh:64px; /* masthead height; refined at runtime */
+  --r:8px;
 }
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  margin:0; background:var(--paper); color:var(--ink);
+  margin:0; background:var(--page); color:var(--ink);
   font-family:var(--serif); font-size:17px; line-height:1.55;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
-a{color:var(--accent); text-decoration:none}
+a{color:var(--link); text-decoration:none}
 a:hover{text-decoration:underline}
 img{max-width:100%}
-:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
-.sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); border:0}
+:focus-visible{outline:2px solid var(--link); outline-offset:2px; border-radius:3px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);border:0}
 
-/* -------- masthead -------- */
-.masthead{
-  position:sticky; top:0; z-index:50; background:var(--chrome);
-  color:var(--ink-on-dark); border-bottom:1px solid #0c151b;
-}
-.masthead .bar{
-  max-width:var(--maxw); margin:0 auto; padding:12px 22px;
-  display:flex; align-items:center; gap:18px;
-}
-.brand{display:flex; align-items:center; gap:12px; color:var(--ink-on-dark); flex:0 0 auto}
-.brand:hover{text-decoration:none}
-.brand .mark{
-  width:30px; height:34px; flex:0 0 auto; position:relative;
-  background:
-    linear-gradient(135deg,var(--accent-bright) 0 46%, transparent 46%),
-    linear-gradient(var(--accent) 0 0);
-  border-radius:3px; box-shadow:inset 0 0 0 1px #0c151b;
-}
-.brand .mark::after{
-  content:""; position:absolute; right:5px; bottom:5px; width:8px; height:8px;
-  background:var(--chrome); clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%);
-}
-.brand .wordmark{display:flex; flex-direction:column; line-height:1}
-.brand .wordmark b{font-family:var(--sans); font-weight:800; letter-spacing:.16em; font-size:1.18rem}
-.brand .wordmark span{font-family:var(--sans); font-weight:500; letter-spacing:.26em; font-size:.56rem; color:var(--accent-bright); margin-top:3px; text-transform:uppercase}
-.masthead .spacer{flex:1 1 auto}
-.masthead .top-search{flex:0 1 360px; display:flex; align-items:center; gap:8px}
-.masthead .top-search input{
-  width:100%; font-family:var(--sans); font-size:.9rem; color:var(--ink-on-dark);
-  background:var(--chrome-2); border:1px solid #2c4150; border-radius:8px;
-  padding:9px 12px;
-}
-.masthead .top-search input::placeholder{color:var(--ink-on-dark-2)}
-.masthead .top-search input:focus{border-color:var(--accent-bright); outline:none}
+/* -------- masthead: white brand bar + slate nav (TARO style) -------- */
+.masthead{position:sticky; top:0; z-index:50; background:#fff; border-top:3px solid var(--taro-teal); box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.mast-top{max-width:var(--maxw); margin:0 auto; padding:12px 22px; display:flex; align-items:center; gap:20px}
+.mast-brand{flex:0 0 auto; display:block}
+.mast-brand:hover{text-decoration:none}
+.mast-logo{height:46px; width:auto; display:block}
+.mast-top .spacer{flex:1 1 auto}
+.mast-search{flex:0 1 380px; display:flex; gap:0; border:1px solid var(--rule); border-radius:7px; overflow:hidden; background:#fff}
+.mast-search input{flex:1; min-width:0; font-family:var(--sans); font-size:.92rem; color:var(--ink); border:0; padding:9px 12px; background:transparent}
+.mast-search input:focus{outline:none}
+.mast-search button{flex:0 0 auto; font-family:var(--sans); font-size:.85rem; font-weight:600; color:#fff; background:var(--taro-blue); border:0; padding:0 16px; cursor:pointer}
+.mast-search button:hover{background:var(--taro-blue-dark)}
+.mast-nav{background:var(--taro-blue)}
+.mast-nav-in{max-width:var(--maxw); margin:0 auto; padding:0 22px; display:flex; gap:6px; justify-content:center}
+.mast-nav-in a{font-family:var(--sans); font-size:.9rem; color:#fff; padding:11px 16px; display:inline-block}
+.mast-nav-in a:hover{background:var(--taro-blue-dark); text-decoration:none}
 
-/* -------- generic layout -------- */
+/* -------- layout -------- */
 .wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px}
-.page{padding:34px 0 80px}
-.crumbs{
-  font-family:var(--sans); font-size:.82rem; color:var(--ink-3);
-  display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:18px;
-}
-.crumbs a{color:var(--ink-2)}
+.page{padding:30px 0 80px}
+.crumbs{font-family:var(--sans); font-size:.82rem; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:18px}
+.crumbs a{color:var(--link)}
 .crumbs .sep{color:var(--rule)}
 
-.pagehead{margin:6px 0 24px}
-.pagehead h1{
-  font-family:var(--sans); font-weight:800; letter-spacing:-.01em;
-  font-size:clamp(1.6rem,3.4vw,2.3rem); line-height:1.1; margin:0 0 8px; color:var(--ink);
-}
-.pagehead p.lede{margin:0; color:var(--ink-2); max-width:60ch; font-size:1.04rem}
+.pagehead{margin:6px 0 22px}
+.pagehead h1{font-family:var(--sans); font-weight:800; letter-spacing:-.01em; font-size:clamp(1.6rem,3.4vw,2.25rem); line-height:1.12; margin:0 0 8px; color:var(--ink)}
+.pagehead p.lede{margin:0; color:var(--ink-2); max-width:62ch; font-size:1.04rem}
 .pagehead .count{font-family:var(--mono); font-size:.8rem; color:var(--ink-3)}
 
+/* -------- front-page hero search (primary action) -------- */
+.hero{background:#fff; border:1px solid var(--rule); border-radius:12px; padding:40px 24px 36px; text-align:center; margin-bottom:30px}
+.hero h1{font-family:var(--sans); font-weight:800; letter-spacing:-.015em; font-size:clamp(1.8rem,4vw,2.5rem); margin:0 0 8px; color:var(--ink)}
+.hero p{margin:0 auto; color:var(--ink-2); max-width:60ch; font-size:1.06rem}
+.hero-search{display:flex; max-width:680px; margin:22px auto 0; border:2px solid var(--taro-blue); border-radius:10px; overflow:hidden}
+.hero-search input{flex:1; min-width:0; font-family:var(--serif); font-size:1.1rem; color:var(--ink); border:0; padding:14px 18px}
+.hero-search input:focus{outline:none}
+.hero-search button{flex:0 0 auto; font-family:var(--sans); font-size:1rem; font-weight:700; color:#fff; background:var(--taro-blue); border:0; padding:0 26px; cursor:pointer}
+.hero-search button:hover{background:var(--taro-blue-dark)}
+.hero .hint{margin-top:14px; font-family:var(--sans); font-size:.85rem}
+
+.section-label{font-family:var(--sans); font-weight:700; font-size:1.15rem; color:var(--ink); margin:0 0 14px}
+
 /* -------- toolbar (search + sort) -------- */
-.toolbar{
-  display:flex; flex-wrap:wrap; gap:12px; align-items:center;
-  margin:0 0 22px; padding:14px 16px; background:var(--paper-3);
-  border:1px solid var(--rule-soft); border-radius:var(--r);
-}
+.toolbar{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:0 0 22px; padding:14px 16px; background:#fff; border:1px solid var(--rule); border-radius:var(--r)}
 .toolbar .find{flex:1 1 320px; position:relative; display:flex; align-items:center}
 .toolbar .find svg{position:absolute; left:12px; width:16px; height:16px; color:var(--ink-3)}
-.toolbar .find input{
-  width:100%; font-family:var(--sans); font-size:.95rem; color:var(--ink);
-  padding:10px 12px 10px 36px; background:#fff; border:1px solid var(--rule);
-  border-radius:8px;
-}
-.toolbar .find input:focus{border-color:var(--accent); outline:none}
+.toolbar .find input{width:100%; font-family:var(--sans); font-size:.95rem; color:var(--ink); padding:10px 12px 10px 36px; background:#fff; border:1px solid var(--rule); border-radius:7px}
+.toolbar .find input:focus{border-color:var(--taro-blue); outline:none}
 .toolbar label{font-family:var(--sans); font-size:.82rem; color:var(--ink-3); display:flex; gap:8px; align-items:center}
-.toolbar select{
-  font-family:var(--sans); font-size:.88rem; color:var(--ink); padding:8px 10px;
-  background:#fff; border:1px solid var(--rule); border-radius:8px;
-}
+.toolbar select{font-family:var(--sans); font-size:.88rem; color:var(--ink); padding:8px 10px; background:#fff; border:1px solid var(--rule); border-radius:7px}
 .toolbar .ctrl-count{font-family:var(--mono); font-size:.76rem; color:var(--ink-3); margin-left:auto}
 
 /* -------- repository directory grid -------- */
-.grid{
-  display:grid; gap:14px;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-}
-.repo-card{
-  display:block; background:var(--paper-3); border:1px solid var(--rule-soft);
-  border-left:3px solid var(--accent); border-radius:var(--r);
-  padding:18px 18px 16px; color:var(--ink); transition:border-color .12s, transform .12s, box-shadow .12s;
-}
-.repo-card:hover{
-  text-decoration:none; border-color:var(--rule); border-left-color:var(--accent-2);
-  transform:translateY(-1px); box-shadow:0 6px 18px -12px rgba(21,33,42,.5);
-}
+.grid{display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.repo-card{display:flex; flex-direction:column; background:#fff; border:1px solid var(--rule); border-left:4px solid var(--taro-blue); border-radius:var(--r); padding:16px 18px; color:var(--ink); transition:border-color .12s, box-shadow .12s, transform .12s}
+.repo-card:hover{text-decoration:none; border-left-color:var(--taro-blue-dark); box-shadow:0 6px 18px -12px rgba(32,55,90,.4); transform:translateY(-1px)}
 .repo-card .rname{font-family:var(--sans); font-weight:700; font-size:1.04rem; line-height:1.25; color:var(--ink)}
-.repo-card .rmeta{
-  margin-top:10px; display:flex; align-items:center; gap:10px;
-  font-family:var(--mono); font-size:.72rem; color:var(--ink-3);
-}
-.repo-card .slug{background:var(--paper-2); padding:2px 7px; border-radius:5px; letter-spacing:.02em}
-.repo-card .arrow{margin-left:auto; color:var(--accent); font-family:var(--sans)}
+.repo-card .rmeta{margin-top:12px; display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:.74rem; color:var(--ink-3)}
+.repo-card .rcount{color:var(--taro-blue); font-weight:700}
+.repo-card .slug{background:var(--panel); padding:2px 7px; border-radius:5px; letter-spacing:.02em}
+.repo-card .arrow{margin-left:auto; color:var(--link); font-family:var(--sans)}
 
-/* -------- finding-aid list -------- */
-.aid-list{display:flex; flex-direction:column; gap:0; border-top:1px solid var(--rule-soft)}
-.aid-row{
-  display:grid; grid-template-columns:1fr auto; gap:6px 22px; align-items:start;
-  padding:18px 4px; border-bottom:1px solid var(--rule-soft);
-}
-.aid-row:hover{background:var(--paper-3)}
-.aid-row .atitle{
-  font-family:var(--serif); font-weight:600; font-size:1.12rem; line-height:1.25; margin:0;
-}
-.aid-row .atitle a{color:var(--ink)}
-.aid-row .aabs{margin:6px 0 0; color:var(--ink-2); font-size:.96rem; max-width:78ch;
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
-.aid-row .ameta{
-  margin-top:9px; display:flex; flex-wrap:wrap; gap:7px 10px;
-  font-family:var(--mono); font-size:.72rem; color:var(--ink-3); align-items:center;
-}
+/* -------- finding-aid list (consistent left alignment) -------- */
+.aid-list{display:flex; flex-direction:column; border-top:1px solid var(--rule-soft)}
+.aid-row{padding:18px 2px; border-bottom:1px solid var(--rule-soft)}
+.aid-row:hover{background:#fff}
+.aid-row .atitle{font-family:var(--serif); font-weight:600; font-size:1.14rem; line-height:1.3; margin:0}
+.aid-row .atitle a{color:var(--link)}
+.aid-row .aabs{margin:6px 0 0; color:var(--ink-2); font-size:.96rem; max-width:82ch; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.aid-row .ameta{margin-top:9px; display:flex; flex-wrap:wrap; gap:7px 10px; font-family:var(--mono); font-size:.72rem; color:var(--ink-3); align-items:center}
 .aid-row .ameta .dates{color:var(--ink-2)}
-.aid-row .ameta .pill{background:var(--paper-2); padding:2px 7px; border-radius:5px}
+.aid-row .ameta .pill{background:var(--panel); padding:2px 7px; border-radius:5px}
+.aid-row .ameta .pill.repo{background:#eef3fa; color:var(--taro-blue-dark)}
 .aid-row .ameta .pill.digi{background:#e7f0e9; color:#2c6b43}
-.aid-row .go{
-  grid-row:1 / span 3; align-self:center; font-family:var(--sans); font-size:.84rem;
-  white-space:nowrap; color:var(--accent); font-weight:600;
-}
+.aid-row .open{margin-top:9px; font-family:var(--sans); font-size:.82rem; font-weight:600; color:var(--link); display:inline-block}
 mark{background:var(--mark); color:inherit; padding:0 .06em; border-radius:2px; box-shadow:inset 0 -1px 0 var(--mark-line)}
 
 /* -------- states -------- */
-.state{
-  padding:46px 22px; text-align:center; color:var(--ink-2);
-  background:var(--paper-3); border:1px dashed var(--rule); border-radius:var(--r);
-}
+.state{padding:42px 22px; text-align:center; color:var(--ink-2); background:#fff; border:1px dashed var(--rule); border-radius:var(--r)}
 .state h2{font-family:var(--sans); font-weight:700; color:var(--ink); margin:0 0 8px; font-size:1.1rem}
 .state.error{border-color:var(--mark-line); background:#fbf4e3}
-.spinner{
-  width:26px; height:26px; border-radius:50%; margin:0 auto 14px;
-  border:3px solid var(--rule); border-top-color:var(--accent); animation:spin .8s linear infinite;
-}
+.spinner{width:26px; height:26px; border-radius:50%; margin:0 auto 14px; border:3px solid var(--rule); border-top-color:var(--taro-blue); animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.skeleton{height:14px; border-radius:4px; background:linear-gradient(90deg,var(--paper-2),var(--paper-3),var(--paper-2)); background-size:200% 100%; animation:sk 1.2s ease-in-out infinite}
-@keyframes sk{to{background-position:-200% 0}}
 
 /* -------- footer -------- */
-.site-foot{
-  background:var(--chrome); color:var(--ink-on-dark-2);
-  font-family:var(--sans); font-size:.82rem; line-height:1.6;
-}
-.site-foot .wrap{padding:26px 22px; display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between}
-.site-foot a{color:var(--accent-bright)}
+.site-foot{background:var(--taro-blue); color:#d7e0ec; font-family:var(--sans); font-size:.82rem; line-height:1.6; margin-top:10px}
+.site-foot .wrap{padding:24px 22px; display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between}
+.site-foot a{color:#fff; text-decoration:underline}
 .site-foot .disclaimer{max-width:62ch}
 
 @media (max-width:720px){
   body{font-size:16px}
-  .masthead .top-search{display:none}
-  .aid-row{grid-template-columns:1fr}
-  .aid-row .go{grid-row:auto; justify-self:start; margin-top:6px}
+  .mast-search{flex-basis:200px}
+  .mast-logo{height:38px}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms !important; transition-duration:.001ms !important}

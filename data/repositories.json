@@ -59,7 +59,7 @@
     { "slug": "uhwarc", "name": "University of Houston Libraries, Women's Archive and Research Center" },
     { "slug": "unt", "name": "University of North Texas Special Collections" },
     { "slug": "untmlsc", "name": "University of North Texas Music Library Special Collections" },
-    { "slug": "utaaa", "name": "Alexander Architectural Archives, The University of Texas at Austin" },
+    { "slug": "utaaa", "name": "Alexander Architectural Archives, The University of Texas at Austin", "count": 151 },
     { "slug": "utarl", "name": "University of Texas Arlington Libraries Special Collections" },
     { "slug": "utcah", "name": "Briscoe Center for American History" },
     { "slug": "utd", "name": "The University of Texas at Dallas" },

@@ -280,10 +280,12 @@ async function main() {
   console.log(`  ${sets.length} repositories`);
 
   const targets = ONLY.length ? sets.filter((s) => ONLY.includes(s.slug)) : sets;
-  for (const { slug, name } of targets) {
+  for (const repo of targets) {
+    const { slug, name } = repo;
     try {
       process.stdout.write(`• ${slug} … `);
       const { list, pages } = await harvestRepo(slug, name);
+      repo.count = list.length; // finding-aid count shown on the directory cards
       let eadCount = 0;
       if (FULL_EAD_REPOS.includes(slug)) eadCount = await prefetchEads(slug, list);
       await writeFile(
@@ -296,6 +298,12 @@ async function main() {
       console.log(`failed: ${e.message}`);
     }
   }
+
+  // Re-write the directory now that each entry carries a finding-aid count.
+  await writeFile(
+    join(OUT, "repositories.json"),
+    JSON.stringify({ generated: new Date().toISOString(), source: `${OAI_BASE}?verb=ListSets`, repositories: sets }, null, 2)
+  );
   console.log("✓ done");
 }
 
